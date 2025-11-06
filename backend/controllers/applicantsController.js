@@ -20,3 +20,42 @@ export const getApplicants = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// ✅ Update Applicant Status
+export const updateApplicantStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const applicant = await Applicant.findById(id);
+    if (!applicant) {
+      return res.status(404).json({ message: "Applicant not found" });
+    }
+
+    applicant.status = status || applicant.status;
+    await applicant.save();
+
+    res.status(200).json({ message: "Status updated successfully", applicant });
+  } catch (error) {
+    console.error("Error updating applicant status:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Delete Applicant
+export const deleteApplicant = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const applicant = await Applicant.findByIdAndDelete(id);
+
+    if (!applicant) {
+      return res.status(404).json({ message: "Applicant not found" });
+    }
+
+    res.status(200).json({ message: "Applicant deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting applicant:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

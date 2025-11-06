@@ -5,13 +5,13 @@ import services from "./servicesData";
 
 const OurServices = () => {
   return (
-    <section className="pt-16">
+    <section className="pt-16 ">
       {/* SEO Title + Meta */}
       <Helmet>
         <title>Our Services</title>
         <meta
           name="description"
-          content="Explore RASA's professional services including web development, software solutions, IT consulting, and more."
+          content="Explore Our Company professional services including web development, software solutions, IT consulting, and more."
         />
       </Helmet>
 
@@ -25,7 +25,7 @@ const OurServices = () => {
 
       {/* Service Categories */}
       {services.map((section, index) => (
-        <div key={index} className="mb-16">
+        <div key={index} className="px-6 py-12 mx-auto max-w-7xl">
           <h3 className="mb-6 text-2xl font-semibold text-blue-600">
             {section.category}
           </h3>

@@ -1,204 +1,156 @@
 import React, { useState } from "react";
-import emailjs from "emailjs-com";
+import axios from "axios";
 
-const CareersForm = () => {
-  const [hasExperience, setHasExperience] = useState(false);
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+const CareersForm = ({ selectedJob }) => {
+  const [formData, setFormData] = useState({
+    name: "",
     phone: "",
-    salary: "",
-    startDate: "",
-    endDate: "",
+    email: "",
+    age: "",
+    jobTitle: selectedJob || "",
+    resume: null,
   });
 
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+
+    if (name === "resume") {
+      const file = files[0];
+      if (file && file.type !== "application/pdf") {
+        setError("Only PDF files are allowed.");
+        return;
+      }
+      if (file && file.size > 5 * 1024 * 1024) {
+        setError("File size must be less than 5MB.");
+        return;
+      }
+      setError("");
+      setFormData({ ...formData, resume: file });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✨ Send data via EmailJS
-    emailjs
-      .send(
-         "service_gjbcw9k", // replace with your EmailJS service ID
-        "template_bat5c7i", // replace with EmailJS Template ID
-        {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          phone: form.phone,
-          salary: form.salary,
-          startDate: hasExperience ? form.startDate : "N/A",
-          endDate: hasExperience ? form.endDate : "N/A",
-        },
-        "Vmj-Zo4qWyL0VL3Qx" // replace with EmailJS Public Key
-      )
-      .then(
-        () => {
-          alert("✅ Application submitted successfully!");
-          setForm({
-            firstName: "",
-            lastName: "",
-            email: "",
-            phone: "",
-            salary: "",
-            startDate: "",
-            endDate: "",
-          });
-          setHasExperience(false);
-        },
-        (error) => {
-          console.error("EmailJS Error:", error);
-          alert("❌ Failed to submit. Try again later.");
-        }
+    if (!formData.resume) {
+      setError("Please upload your resume (PDF only).");
+      return;
+    }
+
+    try {
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("phone", formData.phone);
+      data.append("age", formData.age);
+      data.append("jobTitle", formData.jobTitle);
+      data.append("resume", formData.resume);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/applicants",   // ✅ correct route
+        data,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
+
+      setSuccess("Application submitted successfully!");
+      console.log("Server Response:", response.data);
+      setError("");
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        age: "",
+        jobTitle: selectedJob || "",
+        resume: null,
+      });
+    } catch (err) {
+      console.error("Error uploading:", err);
+      setError("Failed to submit application. Please try again.");
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 bg-pink-100">
-      <div className="relative flex items-center justify-center w-full">
-        <form
-          onSubmit={handleSubmit}
-          className="w-full max-w-lg p-6 bg-blue-100 shadow-2xl rounded-2xl "
-        >
-          <h2 className="mb-6 text-3xl font-bold text-center text-gray-800">
-            Apply for Internship
-          </h2>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="mb-4 text-2xl font-semibold text-center text-blue-700">
+        Apply for {formData.jobTitle}
+      </h2>
 
-          {/* First Name */}
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-semibold text-gray-600">
-              First Name *
-            </label>
-            <input
-              type="text"
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
-              placeholder="Enter your first name"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Last Name */}
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-semibold text-gray-600">
-              Last Name *
-            </label>
-            <input
-              type="text"
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              placeholder="Enter your last name"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Email */}
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-semibold text-gray-600">
-              Email *
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="your@email.com"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Phone */}
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-semibold text-gray-600">
-              Phone *
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="9876543210"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Experience Checkbox */}
-          <div className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              checked={hasExperience}
-              onChange={(e) => setHasExperience(e.target.checked)}
-              className="mr-2 accent-pink-500"
-            />
-            <span className="text-gray-700">Do you have previous experience?</span>
-          </div>
-
-          {/* Experience Dates */}
-          {hasExperience && (
-            <div className="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
-              <div>
-                <label className="block mb-1 text-sm font-semibold text-gray-600">
-                  Start Date *
-                </label>
-                <input
-                  type="date"
-                  name="startDate"
-                  value={form.startDate}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm font-semibold text-gray-600">
-                  End Date *
-                </label>
-                <input
-                  type="date"
-                  name="endDate"
-                  value={form.endDate}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Expected Salary */}
-          <div className="mb-6">
-            <label className="block mb-1 text-sm font-semibold text-gray-600">
-              Expected Salary *
-            </label>
-            <input
-              type="number"
-              name="salary"
-              value={form.salary}
-              onChange={handleChange}
-              placeholder="Enter expected salary"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full px-4 py-3 font-semibold text-black transition transform bg-pink-200 rounded-lg shadow-md hover:bg-pink-600 hover:scale-105"
-          >
-            Submit Application 🚀
-          </button>
-        </form>
+      <div>
+        <label className="block mb-1 font-medium">Full Name</label>
+        <input
+          type="text"
+          name="name"
+          required
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
       </div>
-    </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Email</label>
+        <input
+          type="email"
+          name="email"
+          required
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Phone</label>
+        <input
+          type="tel"
+          name="phone"
+          required
+          value={formData.phone}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Age</label>
+        <input
+          type="number"
+          name="age"
+          required
+          value={formData.age}
+          onChange={handleChange}
+          className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">
+          Upload Resume (PDF, max 5MB)
+        </label>
+        <input
+          type="file"
+          name="resume"
+          accept="application/pdf"
+          onChange={handleChange}
+          className="w-full"
+        />
+      </div>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      {success && <p className="text-sm text-green-600">{success}</p>}
+
+      <button
+        type="submit"
+        className="w-full py-2 mt-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+      >
+        Submit Application
+      </button>
+    </form>
   );
 };
 
