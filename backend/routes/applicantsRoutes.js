@@ -37,14 +37,14 @@ router.post("/", upload.single("resume"), async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ message: "Resume file is required" });
         }
-
+        const resumePath = `/uploads/resumes/${req.file.filename}`;
         const applicant = new Applicant({
             name,
             email,
             phone,
             age,
             jobTitle,
-            resumePath: req.file.path,
+            resumePath,
         });
 
         await applicant.save();
@@ -58,6 +58,27 @@ router.post("/", upload.single("resume"), async (req, res) => {
 
 router.put("/:id", updateApplicantStatus);
 router.delete("/:id", deleteApplicant);
+
+// ✅ PUT: Update Applicant Status
+router.put("/:id/status", async (req, res) => {
+  try {
+    const { status } = req.body;
+    const applicant = await Applicant.findById(req.params.id);
+
+    if (!applicant) {
+      return res.status(404).json({ message: "Applicant not found" });
+    }
+
+    applicant.status = status;
+    await applicant.save();
+
+    res.json({ message: "Status updated successfully", applicant });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).json({ message: "Failed to update status" });
+  }
+});
+
 
 // ✅ GET: Fetch all applicants
 router.get("/", async (req, res) => {

@@ -6,7 +6,14 @@ const applicantsSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   age: { type: Number, required: true },
   jobTitle: { type: String, required: true },
+
+  status: {
+    type: String,
+    enum: ["Pending", "Shortlisted", "Rejected"],
+    default: "Pending",
+  },
   resumePath: { type: String, required: true },
+
   createdAt: { type: Date, default: Date.now },
 });
 

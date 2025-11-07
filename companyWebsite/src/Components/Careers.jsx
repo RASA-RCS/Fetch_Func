@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
+import axios from "axios";
 import CareersForm from "./CareersForm";
+import { io } from "socket.io-client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
+// ✅ Create socket connection outside the component (global)
+const socket = io("http://localhost:5000", {
+  transports: ["websocket"],
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
+});
 
 const slides = [
   {
@@ -32,7 +44,7 @@ const Careers = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Slider rotation
+  // 🔄 Slider rotation
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % slides.length);
@@ -40,25 +52,60 @@ const Careers = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch jobs from backend
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/jobs");
-        const data = await response.json();
-        setJobs(data);
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchJobs();
-    const interval = setInterval(fetchJobs, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  // 📦 Fetch jobs from backend
+  const fetchJobs = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/jobs");
+      setJobs(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      setLoading(false);
+    }
+  };
 
-  // Handle Apply click
+ // ✅ Connect socket and listen for updates
+useEffect(() => {
+  fetchJobs();
+
+  socket.on("connect", () => {
+    console.log("🟢 Connected to Socket.io server");
+  });
+
+  // ✅ Listen to the same event your server emits: "jobUpdated"
+  socket.on("jobUpdated", (data) => {
+    console.log("📡 Job update received:", data);
+
+    // 🔄 Update state instantly without fetching again (optional but fast)
+    if (data.type === "added") {
+      setJobs((prev) => [data.job, ...prev]);
+      toast.success(`🆕 New job added: ${data.job.title}`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } else if (data.type === "updated") {
+      setJobs((prev) =>
+        prev.map((j) => (j._id === data.job._id ? data.job : j))
+      );
+      toast.info(`✏️ Job updated: ${data.job.title}`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } else if (data.type === "deleted") {
+      setJobs((prev) => prev.filter((j) => j._id !== data.jobId));
+      toast.warn(`🗑️ A job was removed.`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  });
+
+  return () => {
+    socket.off("jobUpdated");
+    // socket.disconnect();
+  };
+}, []);
+
   const handleApplyClick = (jobTitle) => {
     setSelectedJob(jobTitle);
     setShowForm(true);
@@ -70,11 +117,9 @@ const Careers = () => {
         <title>Careers</title>
       </Helmet>
 
-      {/* Hero Section */}
+      {/* Header Section */}
       <div className="py-12 text-center text-white bg-gradient-to-r from-blue-800 to-indigo-100">
-        <h1 className="text-4xl font-extrabold md:text-5xl">
-          Join Our Team @ XYZ
-        </h1>
+        <h1 className="text-4xl font-extrabold md:text-5xl">Join Our Team @ XYZ</h1>
       </div>
 
       {/* Slider Section */}
@@ -100,28 +145,22 @@ const Careers = () => {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="mb-4 text-2xl font-bold text-gray-800">
-              {slides[index].title}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {slides[index].description}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-gray-800">{slides[index].title}</h2>
+            <p className="text-gray-700 leading-relaxed">{slides[index].description}</p>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Job Cards Section */}
+      {/* Job Cards */}
       <div className="px-6 py-12 mx-auto max-w-7xl">
-        <h2 className="mb-8 text-3xl font-extrabold text-center text-gray-800 ">
+        <h2 className="mb-8 text-3xl font-extrabold text-center text-gray-800">
           💼 Open Positions
         </h2>
 
         {loading ? (
           <p className="text-center text-gray-600">Loading jobs...</p>
         ) : jobs.length === 0 ? (
-          <p className="text-center text-gray-500">
-            No job openings available right now.
-          </p>
+          <p className="text-center text-gray-500">No job openings available right now.</p>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {jobs.map((job) => (
@@ -146,22 +185,16 @@ const Careers = () => {
                 </div>
 
                 <div className="p-6 space-y-3">
-                  <p className="flex items-center text-gray-700">
-                    <span className="font-semibold text-blue-700 w-28">
-                      Openings:
-                    </span>
+                  <p>
+                    <span className="font-semibold text-blue-700">Openings:</span>{" "}
                     {job.Opening || "Not specified"}
                   </p>
-                  <p className="flex items-center text-gray-700">
-                    <span className="font-semibold text-blue-700 w-28">
-                      Experience:
-                    </span>
+                  <p>
+                    <span className="font-semibold text-blue-700">Experience:</span>{" "}
                     {job.experience ? `${job.experience} years` : "Fresher"}
                   </p>
-                  <p className="flex items-center text-gray-700">
-                    <span className="font-semibold text-blue-700 w-28">
-                      Package:
-                    </span>
+                  <p>
+                    <span className="font-semibold text-blue-700">Package:</span>{" "}
                     {job.salary ? `${job.salary} LPA` : "Not disclosed"}
                   </p>
                   <p className="pt-2 text-sm text-gray-600 border-t">
@@ -210,6 +243,7 @@ const Careers = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <ToastContainer />
     </div>
   );
 };
