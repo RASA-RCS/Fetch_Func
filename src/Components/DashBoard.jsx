@@ -32,7 +32,7 @@ const Dashboard = () => {
     "Technical Support",
   ];
 
-  // Pagination states (moved to top level ✅)
+
   const [currentPage, setCurrentPage] = useState(1);
   const applicantsPerPage = 5;
 
@@ -72,9 +72,6 @@ const Dashboard = () => {
 
     if (!numberRegex.test(newJob.Opening))
       return alert("⚠️ Opening must be a number only!");
-
-    // if (!numberRegex.test(newJob.experience))
-    //   return alert("⚠️ Experience must be a number only!");
 
     if (!numberRegex.test(newJob.salary))
       return alert("⚠️ Salary must be a number only!");
