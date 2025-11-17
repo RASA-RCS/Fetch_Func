@@ -1,5 +1,6 @@
 import express from "express";
 import { 
+  uploadResume,
   createApplicant, 
   updateApplicantStatus, 
   getApplicants, 
@@ -11,13 +12,13 @@ const router = express.Router();
 // GET all applicants
 router.get("/", getApplicants);
 
-// POST create applicant
-router.post("/", createApplicant);
+// POST create applicant (MULTER MUST RUN FIRST)
+router.post("/", uploadResume, createApplicant);
 
 // PUT update status
 router.put("/:id", updateApplicantStatus);
 
 // DELETE applicant
-router.delete("/:id", deleteApplicant); // ✅ Fixed: matches frontend call
+router.delete("/:id", deleteApplicant);
 
 export default router;
