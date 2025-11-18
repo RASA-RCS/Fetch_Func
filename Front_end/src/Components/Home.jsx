@@ -4,6 +4,7 @@ import servicesData from "./servicesData"; // All service categories + items
 import { motion, useAnimation } from "framer-motion"; // Animation library
 import { useInView } from "react-intersection-observer"; // Detect when elements enter viewport
 import { Link } from "react-router-dom"; // For navigation (SPA)
+import {Helmet} from "react-helmet-async"
 
 // -------------------------------------------------------------
 // 3D TILT EFFECT → Creates card tilt animation on mouse movement
@@ -75,6 +76,9 @@ const Home = () => {
 
   return (
     <div className="w-full bg-gray-50 dark:bg-gray-900 dark:text-white transition">
+      <Helmet>
+        <title>Home</title>
+      </Helmet>
 
       {/* ------------------------------------ */}
       {/* HERO SECTION (Landing Banner) */}
@@ -226,7 +230,7 @@ const Home = () => {
               <img
                 src={
                   i === 0
-                    ? "https://images.unsplash.com/photo-1581091870627-3a86e78a36e8"
+                    ? "https://images.unsplash.com/photo-1593642634367-d91a135587b5"
                     : i === 1
                       ? "https://images.unsplash.com/photo-1542744173-8e7e53415bb0"
                       : i === 2

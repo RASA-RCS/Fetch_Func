@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import servicesData from "./servicesData";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const OurServices = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -13,6 +14,9 @@ const OurServices = () => {
 
   return (
     <div className="w-full bg-gray-50 dark:bg-gray-900 dark:text-white min-h-screen pt-24 px-6">
+      <Helmet>
+        <title>Our Services</title>
+      </Helmet>
       <h1 className="text-5xl text-center font-bold mb-6">Our Services</h1>
 
       {/* Filters */}

@@ -7,7 +7,7 @@ A complete full-stack application that includes a modern React (Vite + Tailwind)
 ## 📌 Project Structure
 
 ```
-companyWebsite/
+Front_end/
 │
 ├── public/
 ├── src/                      # Frontend (React)

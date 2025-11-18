@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import logo from '../image/image.png';
 
 const Navbar = () => {
@@ -10,32 +10,38 @@ const Navbar = () => {
     { name: 'Our Services', to: '/ourservices' },
     { name: 'Careers', to: '/careers' },
     { name: 'Contact Us', to: '/contactus' },
-    { name: 'Admin ', to: '/dashboard' }, // Adjust if you create a separate page or section
+    { name: 'Admin', to: '/dashboard' },
   ];
+
+  const activeClass =
+    "text-blue-600 font-bold border-b-2 border-blue-600";
+  const normalClass =
+    "text-gray-700 hover:text-blue-600";
 
   return (
     <nav className="fixed z-50 w-full bg-white shadow-md">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-blue-600"> <img
-              src={logo}
-              alt="logo"
-              className="max-w-half h-16 dark:hidden"
-            /></Link>
+            <NavLink to="/" className="text-xl font-bold text-blue-600">
+              <img src={logo} alt="logo" className="max-w-half h-16 dark:hidden" />
+            </NavLink>
           </div>
 
           {/* Desktop Links */}
           <div className="items-center hidden space-x-6 md:flex">
             {navLinks.map((link) => (
-              <Link
+              <NavLink
                 key={link.name}
                 to={link.to}
-                className="text-gray-700 transition-colors hover:text-blue-600"
+                className={({ isActive }) =>
+                  isActive ? activeClass : normalClass
+                }
               >
                 {link.name}
-              </Link>
+              </NavLink>
             ))}
           </div>
 
@@ -43,12 +49,10 @@ const Navbar = () => {
           <div className="flex items-center md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              type="button"
-              className="text-gray-700 hover:text-blue-600 focus:outline-none"
+              className="text-gray-700 hover:text-blue-600"
             >
               <svg
                 className="w-6 h-6"
-                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -61,22 +65,25 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
+
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Dropdown */}
       {isOpen && (
         <div className="bg-white shadow-md md:hidden">
           <div className="px-4 pt-2 pb-4 space-y-2">
             {navLinks.map((link) => (
-              <Link
+              <NavLink
                 key={link.name}
                 to={link.to}
                 onClick={() => setIsOpen(false)}
-                className="block text-gray-700 transition-colors hover:text-blue-600"
+                className={({ isActive }) =>
+                  isActive ? activeClass : normalClass
+                }
               >
                 {link.name}
-              </Link>
+              </NavLink>
             ))}
           </div>
         </div>
