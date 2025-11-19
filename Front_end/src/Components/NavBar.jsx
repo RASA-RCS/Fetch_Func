@@ -1,37 +1,34 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import logo from '../image/image.png';
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import logo from "../image/image.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Home', to: '/' },
-    { name: 'Our Services', to: '/ourservices' },
-    { name: 'Careers', to: '/careers' },
-    { name: 'Contact Us', to: '/contactus' },
-    { name: 'Admin', to: '/dashboard' },
+    { name: "Home", to: "/" },
+    { name: "Our Services", to: "/ourservices" },
+    { name: "Careers", to: "/careers" },
+    { name: "Contact Us", to: "/contactus" },
+    { name: "Admin", to: "/dashboard" },
   ];
 
   const activeClass =
-    "text-blue-600 font-bold border-b-2 border-blue-600";
+    "text-blue-600 font-bold border-b-2 border-blue-600 block py-2";
   const normalClass =
-    "text-gray-700 hover:text-blue-600";
+    "text-gray-700 hover:text-blue-600 block py-2 transition";
 
   return (
-    <nav className="fixed z-50 w-full bg-white shadow-md">
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-
+    <nav className="fixed top-0 left-0 z-50 w-full bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <NavLink to="/" className="text-xl font-bold text-blue-600">
-              <img src={logo} alt="logo" className="max-w-half h-16 dark:hidden" />
-            </NavLink>
-          </div>
+          <NavLink to="/" className="flex items-center">
+            <img src={logo} alt="logo" className="h-14 w-auto" />
+          </NavLink>
 
-          {/* Desktop Links */}
-          <div className="items-center hidden space-x-6 md:flex">
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <NavLink
                 key={link.name}
@@ -45,49 +42,65 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-blue-600"
-            >
+          {/* Mobile Hamburger Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-gray-700 hover:text-blue-600 transition"
+          >
+            {isOpen ? (
               <svg
-                className="w-6 h-6"
+                className="w-7 h-7"
                 fill="none"
-                viewBox="0 0 24 24"
                 stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {isOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
-            </button>
-          </div>
-
+            ) : (
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
       {/* Mobile Dropdown */}
-      {isOpen && (
-        <div className="bg-white shadow-md md:hidden">
-          <div className="px-4 pt-2 pb-4 space-y-2">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.to}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  isActive ? activeClass : normalClass
-                }
-              >
-                {link.name}
-              </NavLink>
-            ))}
-          </div>
+      <div
+        className={`md:hidden bg-white shadow-md transition-all duration-300 overflow-hidden ${
+          isOpen ? "max-h-96" : "max-h-0"
+        }`}
+      >
+        <div className="px-4 py-3 space-y-2">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.to}
+              onClick={() => setIsOpen(false)}
+              className={({ isActive }) =>
+                isActive ? activeClass : normalClass
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
         </div>
-      )}
+      </div>
     </nav>
   );
 };

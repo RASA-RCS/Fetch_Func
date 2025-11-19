@@ -13,7 +13,7 @@ const OurServices = () => {
       : servicesData.find((c) => c.category === selectedCategory)?.items || [];
 
   return (
-    <div className="w-full bg-gray-50 dark:bg-gray-900 dark:text-white min-h-screen pt-24 px-6">
+    <div className="w-full bg-gray-300 dark:bg-gray-900 dark:text-white min-h-screen pt-24 px-6">
       <Helmet>
         <title>Our Services</title>
       </Helmet>

@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 // ✅ Create socket connection outside the component (global)
-const socket = io("http://localhost:5000", {
+const socket = io("http://localhost:9000", {
   transports: ["websocket"],
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
@@ -55,7 +55,7 @@ const Careers = () => {
   // 📦 Fetch jobs from backend
   const fetchJobs = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/jobs");
+      const res = await axios.get("http://localhost:9000/api/jobs");
       setJobs(res.data);
       setLoading(false);
     } catch (error) {
@@ -112,7 +112,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="pt-6">
+    <div className="pt-6 bg-gray-300">
       <Helmet>
         <title>Careers</title>
       </Helmet>

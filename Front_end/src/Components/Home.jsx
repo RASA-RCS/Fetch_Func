@@ -75,7 +75,7 @@ const Home = () => {
   };
 
   return (
-    <div className="w-full bg-gray-50 dark:bg-gray-900 dark:text-white transition">
+    <div className="w-full bg-gray-300 dark:bg-gray-900 dark:text-white transition">
       <Helmet>
         <title>Home</title>
       </Helmet>

@@ -39,7 +39,7 @@ const Dashboard = () => {
   // 📦 Fetch Jobs
   const fetchJobs = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/jobs");
+      const res = await axios.get("http://localhost:9000/api/jobs");
       setJobs(res.data);
     } catch (error) {
       console.error("Error fetching jobs:", error);
@@ -49,7 +49,7 @@ const Dashboard = () => {
   // 📦 Fetch Applicants
   const fetchApplicants = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/applicants");
+      const res = await axios.get("http://localhost:9000/api/applicants");
       setApplicants(res.data);
     } catch (error) {
       console.error("Error fetching applicants:", error);
@@ -61,7 +61,11 @@ const Dashboard = () => {
     fetchApplicants();
   }, []);
 
-
+const navigateToHome = () => {
+  localStorage.removeItem("token");   // remove auth token
+  alert("Logged out successfully!");
+  window.location.href = "/";         // redirect to home page
+};
 
   // ✅ Validation Function
   const validateJobForm = () => {
@@ -89,7 +93,7 @@ const Dashboard = () => {
     if (duplicate) return alert("⚠️ This job title already exists!");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/jobs", newJob);
+      const res = await axios.post("http://localhost:9000/api/jobs", newJob);
       alert("✅ Job added successfully!");
       setJobs([...jobs, res.data]);
       resetForm();
@@ -112,7 +116,7 @@ const Dashboard = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/jobs/${editId}`,
+        `http://localhost:9000/api/jobs/${editId}`,
         newJob
       );
       alert("✅ Job updated successfully!");
@@ -127,7 +131,7 @@ const Dashboard = () => {
   const handleDeleteJob = async (id) => {
     if (!window.confirm("Are you sure you want to delete this job?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/jobs/${id}`);
+      await axios.delete(`http://localhost:9000/api/jobs/${id}`);
       setJobs(jobs.filter((job) => job._id !== id));
       alert("🗑️ Job deleted successfully!");
     } catch (error) {
@@ -187,7 +191,7 @@ const Dashboard = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/applicants/${id}`,
+        `http://localhost:9000/api/applicants/${id}`,
         { status: newStatus }
       );
       setApplicants((prev) =>
@@ -203,7 +207,7 @@ const Dashboard = () => {
   const handleDeleteApplicant = async (id) => {
     if (!window.confirm("Delete this applicant?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/applicants/${id}`);
+      await axios.delete(`http://localhost:9000/api/applicants/${id}`);
       setApplicants((prev) => prev.filter((a) => a._id !== id));
     } catch (error) {
       console.error("Error deleting applicant:", error);
@@ -211,7 +215,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 pt-20">
+    <div className="flex min-h-screen bg-gray-300 pt-20">
       <Helmet>
         <title>Dashboard</title>
       </Helmet>
@@ -222,8 +226,8 @@ const Dashboard = () => {
         <ul className="space-y-3">
           <li
             className={`cursor-pointer p-2 rounded-lg ${activeSection === "jobs"
-                ? "bg-indigo-500"
-                : "hover:bg-indigo-600"
+              ? "bg-indigo-500"
+              : "hover:bg-indigo-600"
               }`}
             onClick={() => {
               setActiveSection("jobs");
@@ -234,8 +238,8 @@ const Dashboard = () => {
           </li>
           <li
             className={`cursor-pointer p-2 rounded-lg ${activeSection === "applicants"
-                ? "bg-indigo-500"
-                : "hover:bg-indigo-600"
+              ? "bg-indigo-500"
+              : "hover:bg-indigo-600"
               }`}
             onClick={() => {
               setActiveSection("applicants");
@@ -244,6 +248,12 @@ const Dashboard = () => {
           >
             Applicants
           </li>
+          {/* <button
+            onClick={navigateToHome}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+          >
+            Logout
+          </button> */}
         </ul>
       </aside>
 
@@ -515,7 +525,7 @@ const ApplicantSection = ({
                 <td className="border p-2">
                   {app.resumeUrl ? (
                     <a
-                      href={`http://localhost:5000${app.resumeUrl}`}
+                      href={`http://localhost:9000${app.resumeUrl}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"
@@ -560,8 +570,8 @@ const ApplicantSection = ({
           onClick={handlePrev}
           disabled={currentPage === 1}
           className={`px-3 py-1 rounded-md ${currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-indigo-600 text-white hover:bg-indigo-700"
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-indigo-600 text-white hover:bg-indigo-700"
             }`}
         >
           Previous
@@ -573,8 +583,8 @@ const ApplicantSection = ({
           onClick={handleNext}
           disabled={currentPage === totalPages}
           className={`px-3 py-1 rounded-md ${currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-indigo-600 text-white hover:bg-indigo-700"
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-indigo-600 text-white hover:bg-indigo-700"
             }`}
         >
           Next

@@ -74,7 +74,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="pt-6">
+    <div className="pt-6 bg-gray-300">
       <Helmet>
         <title>Contact Us</title>
       </Helmet>

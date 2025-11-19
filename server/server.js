@@ -6,6 +6,8 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js"; // All authentication related routes
+import dotenv from "dotenv"; 
 
 // Routes
 import jobRoutes from "./routes/job.routes.js";
@@ -18,6 +20,8 @@ import { setSocket } from "./controllers/job.controller.js";
 import { Server } from "socket.io";
 
 const app = express();
+
+const PORT = process.env.PORT || 9000; // Set port from env or default 9000
 
 // ================================
 // MIDDLEWARE
@@ -33,6 +37,9 @@ app.use("/uploads", express.static("uploads"));
 // ================================
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applicants", applicantRoutes);
+
+// Authentication routes
+app.use("/api/auth", authRoutes); // All routes prefixed with /api/auth
 
 // ================================
 // CREATE HTTP SERVER
@@ -66,8 +73,8 @@ io.on("connection", (socket) => {
 // ================================
 const start = async () => {
   await connectDB();
-  server.listen(5000, () => {
-    console.log("🚀 Server running on port 5000");
+  server.listen(PORT, () => {
+    console.log("🚀 Server running on port ",PORT);
   });
 };
 

@@ -14,7 +14,7 @@ const servicesData = [
           "Craft a roadmap for success with our strategic planning services. We analyze market trends, assess your competitive landscape, and define clear objectives to drive sustainable growth and expansion.",
        img:section1,
           // img: "https://www.training.com.au/wp-content/uploads/Full-Stack-Developer-1.jpeg?auto=format&fit=crop&w=800&q=80",
-        imgClass: "w-full h-64 object-contain rounded-t-lg bg-white",
+        imgClass: "w-full h-70 object-contain rounded-t-lg bg-white",
       },
       {
         id: "market-research",
@@ -23,7 +23,7 @@ const servicesData = [
           "Make informed decisions with our market research and analysis services. From customer segmentation to competitor analysis, we provide valuable insights to help you identify new opportunities and mitigate risks.",
        img:section2,
           // img: "https://www.training.com.au/wp-content/uploads/Full-Stack-Developer-1.jpeg?width=800&dpr=2",
-        imgClass: "w-full h-64 object-contain rounded-t-lg bg-white",
+        imgClass: "w-full h-60 object-contain rounded-t-lg bg-white",
       },
       {
         id: "financial-management",
