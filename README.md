@@ -266,7 +266,7 @@ resume: <file>
 * Job Application Form
 ![Carrer page with applicant form ](image-2.png)
 * Admin Dashboard
-![this is dashboard which is managed by admin](image-3.png)
+![this is dashboard which is managed by admin](image-4.png)
 * Uml Diagram
 ![alt text](umlDiagram.png)
 

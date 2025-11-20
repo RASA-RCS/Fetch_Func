@@ -19,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ForgetPassword from "./Pages/ForgotPassword";
 import ProtectedRoutes from "./Services/ProtectedRoutes";
 import Admin from "./Components/Admin";
+import UserFrom from "./Components/UserFrom";
 
 // import Home from './components/Home';
 
@@ -37,6 +38,7 @@ function App() {
       <HelmetProvider>
         {/* <Navbar /> */}
         {!hidelayout && <Navbar />}
+       
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -49,6 +51,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/session-expired" element={<SessionExpired />} />
+          <Route path="/userFrom" element={<UserFrom/>} />
 
           {/* 🟢 Correct Protected Route Wrapper */}
           <Route element={<ProtectedRoutes />}>

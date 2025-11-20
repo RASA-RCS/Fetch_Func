@@ -122,6 +122,7 @@ const Register = () => {
       toast.error(error.response?.data?.message || "Something went wrong"); // Show backend error
     }
   };
+  
 
   // -------------------- Google Sign-In --------------------
   const googleSign = async () => {

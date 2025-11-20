@@ -105,7 +105,7 @@ const ContactUs = () => {
 
           <motion.div whileHover={{ scale: 1.03 }} className="p-6 bg-white shadow-md rounded-xl">
             <h3 className="text-xl font-semibold text-blue-700">📧 Email</h3>
-            <p className="mt-2 text-gray-600">menukasigdel123@gmail.com</p>
+            <p className="mt-2 text-gray-600">admin123@gmail.com</p>
           </motion.div>
         </div>
 

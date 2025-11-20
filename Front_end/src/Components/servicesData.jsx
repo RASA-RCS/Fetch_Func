@@ -2,7 +2,9 @@ import service1 from "../image/amarPic.png";
 import section1 from "../image/section1.jpg";
 import section2 from "../image/section2.jpg";
 import section3 from "../image/section3.jpg";
-
+import digitalStr  from "../image/digital-strategy-vs-digital-transformation-understanding-digital-strategy-definition-and-scope.jpg"
+import advicCon from "../image/Advisory-and-Consulting.jpg"
+import anlytic from "../image/1686025117689.png"
 const servicesData = [
   {
     category: "Business Consulting",
@@ -44,24 +46,24 @@ const servicesData = [
         title: "Digital Strategy and Transformation",
         description:
           "Craft a roadmap for digital success—from assessing digital maturity to defining execution plans for transformation.",
-        img: service1,
-        imgClass: "w-full h-64 object-contain rounded-t-lg bg-white",
+        img: digitalStr,
+        imgClass: "w-full h-68 object-contain rounded-t-lg bg-white",
       },
       {
         id: "it-consulting",
         title: "IT Consulting and Advisory",
         description:
           "Optimize IT infrastructure and operations with strategic guidance on IT governance, risk management, and compliance.",
-        img: service1,
-        imgClass: "w-full h-64 object-contain rounded-t-lg bg-white",
+        img: advicCon,
+        imgClass: "w-full h-68 object-contain rounded-t-lg bg-white",
       },
       {
         id: "data-analytics",
         title: "Data Analytics and Insights",
         description:
           "Unlock the full potential of your data with analytics solutions like modeling, visualization, and reporting.",
-        img: service1,
-        imgClass: "w-full h-64 object-contain rounded-t-lg bg-white",
+        img: anlytic,
+        imgClass: "w-full h-68 object-contain rounded-t-lg bg-white",
       },
     ],
   },
