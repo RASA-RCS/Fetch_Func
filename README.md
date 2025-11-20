@@ -99,7 +99,7 @@ Front_end/
 
 ```bash
 git clone https://github.com/your-username/companyWebsite.git
-cd companyWebsite
+cd Front_end
 ```
 
 ### 2️⃣ Install Frontend Dependencies
@@ -161,7 +161,7 @@ Resumes are automatically stored in: `server/uploads/resumes/`
 
 ##  Real-Time Features (Socket.io)
 
-* New applicant events
+* New Jobs events
 * Dashboard notification events
 * Client connection status
 
@@ -239,7 +239,7 @@ resume: <file>
             ┌──────────────────────────┴───────────────────────────┐
             │                     SOCKET.IO                        │
             │------------------------------------------------------│
-            │ Real-time events: New applicant, Dashboard alerts    │
+            │ Real-time events: New Job, Dashboard alerts    │
             │ Connected clients: Frontend Dashboard, Admin panel   │
             └───────────────┬──────────────────────────────────────┘
                             │
