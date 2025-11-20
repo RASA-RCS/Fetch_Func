@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async";
+import Cookies from "js-cookie";
+
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("jobs");
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
+  const navigate = useNavigate();
 
   const [jobs, setJobs] = useState([]);
   const [newJob, setNewJob] = useState({
@@ -61,11 +65,16 @@ const Dashboard = () => {
     fetchApplicants();
   }, []);
 
-const navigateToHome = () => {
-  localStorage.removeItem("token");   // remove auth token
-  alert("Logged out successfully!");
-  window.location.href = "/";         // redirect to home page
-};
+  const navigateToHome = () => {
+    // const handleLogout = () => {
+      Cookies.remove("token");          // remove cookie token
+      localStorage.removeItem("sessionExpiry");
+
+      alert("Logged out successfully!");
+      navigate("/", { replace: true });
+    // };
+    // redirect to home page
+  };
 
   // ✅ Validation Function
   const validateJobForm = () => {
@@ -248,12 +257,12 @@ const navigateToHome = () => {
           >
             Applicants
           </li>
-          {/* <button
+          <button
             onClick={navigateToHome}
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
           >
             Logout
-          </button> */}
+          </button>
         </ul>
       </aside>
 

@@ -23,6 +23,7 @@ import refreshIcon from "../image/refresh-removebg-preview.png"; // CAPTCHA refr
 import emailicon from '../image/tl.webp'; // Email icon
 import pwd from "../image/password-76.png"; // Password icon
 import audios from "../sound/success-340660.mp3"; // Success audio
+import dashboard from "../Components/DashBoard";
 
 // ---------------- UTILITY FUNCTIONS ----------------
 // Base64 encode/decode for storing password in cookies
