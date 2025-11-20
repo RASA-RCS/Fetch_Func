@@ -267,6 +267,9 @@ resume: <file>
 ![Carrer page with applicant form ](image-2.png)
 * Admin Dashboard
 ![this is dashboard which is managed by admin](image-4.png)
+![this is applicant](image-5.png)
+![Conditional based through job profile](image-6.png)
+
 * Uml Diagram
 ![alt text](umlDiagram.png)
 
