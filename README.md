@@ -93,9 +93,9 @@ Front_end/
 
 ---
 
-##  Installation & Setup
+## Installation & Setup
 
-### 1️⃣ Clone the Repository
+### 1️⃣Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/companyWebsite.git
@@ -178,7 +178,7 @@ email: test@gmail.com
 resume: <file>
 ```
 
----
+
 
 ##  Project Architecture Diagram
 
@@ -254,7 +254,7 @@ resume: <file>
 
 ---
 
-## 🖼️ Screenshots Section
+## Screenshots Section
 
 *(Replace with your images)*
 
