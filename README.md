@@ -4,7 +4,7 @@ A complete full-stack application that includes a modern React (Vite + Tailwind)
 
 ---
 
-## 📌 Project Structure
+##  Project Structure
 
 ```
 Front_end/
@@ -50,7 +50,7 @@ Front_end/
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Frontend**
 
@@ -70,7 +70,7 @@ Front_end/
 
 ---
 
-## ⭐ Features
+##  Features
 
 **Frontend**
 
@@ -93,9 +93,9 @@ Front_end/
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
-### 1️⃣ Clone the Repository
+### 1️⃣Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/companyWebsite.git
@@ -137,29 +137,29 @@ node server.js
 
 ---
 
-## 🔗 API Endpoints
+##  API Endpoints
 
-### 📌 Applicant Routes
+###  Applicant Routes
 
 | Method | Endpoint              | Description                     |
 | ------ | --------------------- | ------------------------------- |
 | POST   | /api/applicants/apply | Apply for a job + upload resume |
 | GET    | /api/applicants/      | Get all applicants              |
 
-### 📌 Job Routes
+###  Job Routes
 
 | Method | Endpoint         | Description          |
 | ------ | ---------------- | -------------------- |
 | GET    | /api/jobs        | Get all job listings |
 | POST   | /api/jobs/create | Create a new job     |
 
-### 📂 Upload Folder
+###  Upload Folder
 
 Resumes are automatically stored in: `server/uploads/resumes/`
 
 ---
 
-## ⚡ Real-Time Features (Socket.io)
+##  Real-Time Features (Socket.io)
 
 * New applicant events
 * Dashboard notification events
@@ -167,7 +167,7 @@ Resumes are automatically stored in: `server/uploads/resumes/`
 
 ---
 
-## 🧪 Sample Commands (Postman)
+##  Sample Commands (Postman)
 
 **POST:** `http://localhost:5000/api/applicants/apply`
 Form-data:
@@ -178,16 +178,9 @@ email: test@gmail.com
 resume: <file>
 ```
 
----
 
-## ❤️ Author
 
-**Amarjeet Kumar**
-Full-Stack Developer | Cybersecurity + MERN Stack + Java Developer
-
----
-
-## 🏗️ Project Architecture Diagram
+##  Project Architecture Diagram
 
 ```
                        ┌───────────────────────────┐
@@ -261,7 +254,7 @@ Full-Stack Developer | Cybersecurity + MERN Stack + Java Developer
 
 ---
 
-## 🖼️ Screenshots Section
+## Screenshots Section
 
 *(Replace with your images)*
 
