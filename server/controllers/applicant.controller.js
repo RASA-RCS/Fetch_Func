@@ -1,10 +1,12 @@
 import Applicant from "../models/applicant.model.js";
+import { sendStatusEmail, sendApplicationEmail } from "../config/EmailTemplate.js";
 import path from "path";
 import fs from "fs";
-
-// 📌 Multer Setup for PDF Uploads
 import multer from "multer";
 
+// --------------------------------------
+//  MULTER STORAGE FOR PDF UPLOAD
+// --------------------------------------
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadPath = "uploads/resumes";
@@ -31,75 +33,115 @@ export const uploadResume = multer({
     },
 }).single("resume");
 
-// 📌 Controller: Create Applicant
+
+// --------------------------------------
+//  CREATE APPLICANT + SEND EMAIL
+
+
 export const createApplicant = async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ message: "Resume PDF is required" });
-        }
-
-        const { name, phone, email, age, jobTitle } = req.body;
-
-        const applicant = new Applicant({
-            name,
-            phone,
-            email,
-            age,
-            jobTitle,
-            resumeUrl: `/uploads/resumes/${req.file.filename}`,
-        });
-
-        await applicant.save();
-
-        res.status(201).json({
-            message: "Application submitted successfully",
-            applicant,
-        });
-    } catch (error) {
-        console.error("Error creating applicant:", error);
-        res.status(500).json({ message: "Server error" });
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "Resume PDF is required" });
     }
+
+    const { name, phone, email, age, jobTitle } = req.body;
+
+    const applicant = new Applicant({
+      name,
+      phone,
+      email,
+      age,
+      jobTitle,
+      resumeUrl: `/uploads/resumes/${req.file.filename}`,
+      status: "Pending", // default status
+    });
+
+    await applicant.save();
+
+    // -----------------------------
+    // Send email to applicant
+    // -----------------------------
+    await sendStatusEmail(email, name, jobTitle, "Pending");
+
+    // Send response to frontend
+    res.status(201).json({
+      message: `Thank you for applying for ${jobTitle}! An email has been sent to ${email}`,
+      applicant,
+    });
+  } catch (error) {
+    console.error("Error creating applicant:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 
-// Update status
+
+
+// --------------------------------------
+//  UPDATE STATUS + SEND EMAIL
+// --------------------------------------
 export const updateApplicantStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
+
         const applicant = await Applicant.findByIdAndUpdate(
             id,
             { status },
             { new: true }
         );
-        if (!applicant) return res.status(404).json({ message: "Applicant not found" });
-        res.json(applicant);
+
+        if (!applicant) {
+            return res.status(404).json({ message: "Applicant not found" });
+        }
+
+        // 📩 SEND EMAIL WHEN STATUS CHANGES
+        await sendStatusEmail(
+            applicant.email,
+            applicant.name,
+            applicant.jobTitle,
+            status
+        );
+
+        res.json({
+            message: "Status updated & email sent",
+            applicant,
+        });
+
     } catch (error) {
-        console.error(error);
+        console.error("Status Update Error:", error);
         res.status(500).json({ message: "Server error" });
     }
 };
 
-// Get all applicants
+
+// --------------------------------------
+//  GET ALL APPLICANTS
+// --------------------------------------
 export const getApplicants = async (req, res) => {
     try {
-        const applicants = await Applicant.find().sort({ createdAt: -1 }); // newest first
+        const applicants = await Applicant.find().sort({ createdAt: -1 });
         res.json(applicants);
     } catch (error) {
-        console.error("Error fetching applicants:", error);
         res.status(500).json({ message: "Server error" });
     }
 };
 
+
+// --------------------------------------
+//  DELETE APPLICANT
+// --------------------------------------
 export const deleteApplicant = async (req, res) => {
     try {
         const { id } = req.params;
         const applicant = await Applicant.findByIdAndDelete(id);
+
         if (!applicant) {
             return res.status(404).json({ message: "Applicant not found" });
         }
+
         res.json({ message: "Applicant deleted successfully" });
+
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 };

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CareersForm = ({ selectedJob }) => {
   const [formData, setFormData] = useState({
@@ -61,44 +63,60 @@ const CareersForm = ({ selectedJob }) => {
     setError("");
     return true;
   };
+   
+
 
   // ✅ Submit Handler
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    try {
-      const data = new FormData();
-      data.append("name", formData.name);
-      data.append("email", formData.email);
-      data.append("phone", formData.phone);
-      data.append("age", formData.age);
-      data.append("jobTitle", formData.jobTitle);
-      data.append("resume", formData.resume);
+  try {
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("age", formData.age);
+    data.append("jobTitle", formData.jobTitle);
+    data.append("resume", formData.resume);
 
-      const response = await axios.post(
-        "http://localhost:9000/api/applicants",
-        data,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+    const response = await axios.post(
+      "http://localhost:9000/api/applicants",
+      data,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
 
-      setSuccess("Application submitted successfully!");
-      console.log("Server Response:", response.data);
-      setError("");
-      setFormData({
-        name: "",
-        phone: "",
-        email: "",
-        age: "",
-        jobTitle: selectedJob || "",
-        resume: null,
-      });
-    } catch (err) {
-      console.error("Error uploading:", err);
-      setError("Failed to submit application. Please try again.");
-    }
-  };
+    // ✅ Show toast notification
+    toast.success("Thank you for applying! Email sent successfully.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+    console.log("Server Response:", response.data);
+    setError("");
+    setFormData({
+      name: "",
+      phone: "",
+      email: "",
+      age: "",
+      jobTitle: selectedJob || "",
+      resume: null,
+    });
+  } catch (err) {
+    console.error("Error uploading:", err);
+    toast.error("Failed to submit application. Please try again.", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

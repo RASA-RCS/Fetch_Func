@@ -1,5 +1,5 @@
-
 import Job from "../models/job.model.js";
+// import { sendStatusEmail } from "../config/EmailTemplate.js"   // ✅ ADDED
 
 let io = null;
 
@@ -89,3 +89,7 @@ export const deleteJob = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+

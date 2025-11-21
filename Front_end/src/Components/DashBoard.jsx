@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 
 const Dashboard = () => {
@@ -21,6 +22,33 @@ const Dashboard = () => {
     experience: "",
     salary: "",
   });
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:9000/api/applicants/${id}`,
+        { status: newStatus }
+      );
+
+      // Update UI
+      setApplicants((prev) =>
+        prev.map((a) => (a._id === id ? { ...a, status: newStatus } : a))
+      );
+
+      // Toast Message
+      toast.success(res.data.message, {
+        position: "top-right",
+        autoClose: 2000,
+      });
+
+    } catch (error) {
+      toast.error("Failed to update status!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    }
+  };
+
 
   const [applicants, setApplicants] = useState([]);
   const [filterJob, setFilterJob] = useState("");
@@ -67,11 +95,11 @@ const Dashboard = () => {
 
   const navigateToHome = () => {
     // const handleLogout = () => {
-      Cookies.remove("token");          // remove cookie token
-      localStorage.removeItem("sessionExpiry");
+    Cookies.remove("token");          // remove cookie token
+    localStorage.removeItem("sessionExpiry");
 
-      alert("Logged out successfully!");
-      navigate("/", { replace: true });
+    alert("Logged out successfully!");
+    navigate("/", { replace: true });
     // };
     // redirect to home page
   };
@@ -196,21 +224,7 @@ const Dashboard = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // ✅ Update applicant status
-  const handleStatusChange = async (id, newStatus) => {
-    try {
-      const res = await axios.put(
-        `http://localhost:9000/api/applicants/${id}`,
-        { status: newStatus }
-      );
-      setApplicants((prev) =>
-        prev.map((a) => (a._id === id ? { ...a, status: newStatus } : a))
-      );
-      console.log("Status updated:", res.data);
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
+
 
   // 🗑️ Delete Applicant
   const handleDeleteApplicant = async (id) => {
@@ -480,7 +494,9 @@ const ApplicantSection = ({
 
     <div className="flex gap-4 mb-4">
       <select
-        onChange={(e) => setFilterJob(e.target.value)}
+        onChange={(e) =>
+          handleStatusChange(app._id, e.target.value)
+        }
         value={filterJob}
         className="border p-2 rounded-md"
       >
