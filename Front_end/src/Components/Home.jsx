@@ -1,4 +1,9 @@
-// Importing all required libraries & modules
+// ---------------- COPYRIGHT & CONFIDENTIALITY ----------------
+//  Copyright (c) [2025] [Rasa Consultancy Services]. All rights reserved.
+//  This software is the confidential and proprietary information of [Rasa Consultancy Services]. 
+//  You shall not disclose such confidential information and shall use it only in accordance 
+//with the terms of the license agreement you entered into with [Rasa Consultancy Services].
+//  For more information, please contact: [Your Company Email/Legal Department Contact]
 import React, { useState, useEffect } from "react";
 import servicesData from "./servicesData"; // All service categories + items
 import { motion, useAnimation } from "framer-motion"; // Animation library
@@ -77,7 +82,7 @@ const Home = () => {
   return (
     <div className="w-full bg-gray-300 dark:bg-gray-900 dark:text-white transition">
       <Helmet>
-        <title>Home</title>
+        <title>Company Website</title>
       </Helmet>
 
       {/* ------------------------------------ */}
@@ -97,7 +102,7 @@ const Home = () => {
             </h1>
 
             <p className="mt-4 text-gray-600 dark:text-gray-300 text-lg text-justify">
-              Ours company specializes in providing expert guidance, strategic planning, and customized solutions to help businesses grow, transform, and operate efficiently. By combining industry knowledge, data-driven insights, and innovative problem-solving approaches, consultancy firms support organizations in overcoming challenges, optimizing processes, improving performance, and achieving long-term success. Whether it’s business development, digital transformation, financial planning, market research, or operational management, a consultancy company acts as a trusted partner, delivering tailored strategies that align with the client’s goals and drive measurable results. Through continuous collaboration and professional expertise, consultancy services empower businesses to stay competitive in a rapidly evolving marketplace
+              Our company specializes in providing expert guidance, strategic planning, and customized solutions to help businesses grow, transform, and operate efficiently. By combining industry knowledge, data-driven insights, and innovative problem-solving approaches, consultancy firms support organizations in overcoming challenges, optimizing processes, improving performance, and achieving long-term success. Whether it’s business development, digital transformation, financial planning, market research, or operational management, a consultancy company acts as a trusted partner, delivering tailored strategies that align with the client’s goals and drive measurable results. Through continuous collaboration and professional expertise, consultancy services empower businesses to stay competitive in a rapidly evolving marketplace
             </p>
 
             <motion.button

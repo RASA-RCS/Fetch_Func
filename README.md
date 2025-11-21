@@ -1,3 +1,9 @@
+// ---------------- COPYRIGHT & CONFIDENTIALITY ----------------
+//  Copyright (c) [2025] [Rasa Consultancy Services]. All rights reserved.
+//  This software is the confidential and proprietary information of [Rasa Consultancy Services]. 
+//  You shall not disclose such confidential information and shall use it only in accordance 
+//with the terms of the license agreement you entered into with [Rasa Consultancy Services].
+//  For more information, please contact: [Your Company Email/Legal Department Contact]
 # Company Website – Full-Stack MERN Project
 
 A complete full-stack application that includes a modern React (Vite + Tailwind) frontend and a Node.js + Express + MongoDB backend. This project supports job applications, resume uploads, real-time socket connections, and multiple frontend service pages.

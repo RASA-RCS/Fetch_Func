@@ -1,3 +1,10 @@
+// ---------------- COPYRIGHT & CONFIDENTIALITY ----------------
+//  Copyright (c) [2025] [Rasa Consultancy Services]. All rights reserved.
+//  This software is the confidential and proprietary information of [Rasa Consultancy Services]. 
+//  You shall not disclose such confidential information and shall use it only in accordance 
+//with the terms of the license agreement you entered into with [Rasa Consultancy Services].
+//  For more information, please contact: [Your Company Email/Legal Department Contact]
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
@@ -170,7 +177,7 @@ const Dashboard = () => {
     try {
       await axios.delete(`http://localhost:9000/api/jobs/${id}`);
       setJobs(jobs.filter((job) => job._id !== id));
-      alert("🗑️ Job deleted successfully!");
+      alert(" Job deleted successfully!");
     } catch (error) {
       console.error("Error deleting job:", error);
     }

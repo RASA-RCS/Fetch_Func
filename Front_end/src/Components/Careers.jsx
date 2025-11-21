@@ -1,3 +1,11 @@
+// ---------------- COPYRIGHT & CONFIDENTIALITY ----------------
+//  Copyright (c) [2025] [Rasa Consultancy Services]. All rights reserved.
+//  This software is the confidential and proprietary information of [Rasa Consultancy Services]. 
+//  You shall not disclose such confidential information and shall use it only in accordance 
+//with the terms of the license agreement you entered into with [Rasa Consultancy Services].
+//  For more information, please contact: [Your Company Email/Legal Department Contact]
+
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
@@ -74,12 +82,12 @@ useEffect(() => {
 
   // ✅ Listen to the same event your server emits: "jobUpdated"
   socket.on("jobUpdated", (data) => {
-    console.log("📡 Job update received:", data);
+    console.log(" Job update received:", data);
 
     // 🔄 Update state instantly without fetching again (optional but fast)
     if (data.type === "added") {
       setJobs((prev) => [data.job, ...prev]);
-      toast.success(`🆕 New job added: ${data.job.title}`, {
+      toast.success(` New job added: ${data.job.title}`, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -87,13 +95,13 @@ useEffect(() => {
       setJobs((prev) =>
         prev.map((j) => (j._id === data.job._id ? data.job : j))
       );
-      toast.info(`✏️ Job updated: ${data.job.title}`, {
+      toast.info(` Job updated: ${data.job.title}`, {
         position: "top-right",
         autoClose: 3000,
       });
     } else if (data.type === "deleted") {
       setJobs((prev) => prev.filter((j) => j._id !== data.jobId));
-      toast.warn(`🗑️ A job was removed.`, {
+      toast.warn(` A job was removed.`, {
         position: "top-right",
         autoClose: 3000,
       });
