@@ -256,7 +256,7 @@ resume: <file>
 
 ## Screenshots Section
 
-*(Replace with your images)*
+
 
 * Home Page
 ![This is Home page](image.png)
@@ -269,6 +269,7 @@ resume: <file>
 ![this is dashboard which is managed by admin](image-4.png)
 ![this is applicant](image-5.png)
 ![Conditional based through job profile](image-6.png)
+![Applicant review](image-7.png)
 
 * Uml Diagram
 ![alt text](umlDiagram.png)

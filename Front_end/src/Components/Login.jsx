@@ -561,53 +561,10 @@ const Login = () => {
             Forgot Password?
           </p>
 
-          <p className="text-center my-3">Or</p>
+          {/* <p className="text-center my-3">Or</p> */}
 
-          {/* Social Login */}
-          <button
-            type="button"
-            onClick={googleSign}
-            className="social-button google-btn w-full mt-3"
-          >
-            <img
-              src="https://www.google.com/favicon.ico"
-              alt="Google Logo"
-              className="icon"
-            />
-            Continue with Google
-          </button>
-
-          <button
-            type="button"
-            onClick={facebookSign}
-            className="social-button facebook-btn w-full mt-2 bg-blue-600 text-white flex items-center justify-center gap-2 py-2 rounded hover:bg-blue-700"
-          >
-            <img
-              src="https://www.facebook.com/images/fb_icon_325x325.png"
-              alt="Facebook Logo"
-              className="icon w-5 h-5"
-            />
-            Continue with Facebook
-          </button>
-
-          {/* <a href="#" className="social-button apple-btn mt-2 w-full flex items-center justify-center gap-2">
-            <img
-              src="https://th.bing.com/th/id/R.1ec11a869384bc5e59625bac39b6a099?rik=1dlGqAp84GWGFw&riu=http%3a%2f%2fpngimg.com%2fuploads%2fapple_logo%2fapple_logo_PNG19692.png&ehk=5ghp5P0aLzQqfUKTsPihTYaIP%2b4VcHGKNovcBq8KOuo%3d&risl=&pid=ImgRaw&r=0"
-              alt="Apple Logo"
-              className="icon"
-            />
-            Continue with Apple
-          </a> */}
-
-          <p className="text-sm text-center mt-3">
-            Don’t have an account?{" "}
-            <span
-              className="singbtn cursor-pointer font-medium underline"
-              onClick={() => navigate("/register")}
-            >
-              Sign Up
-            </span>
-          </p>
+     
+          {/* </p> */}
         </form>
       ) : (
         <form onSubmit={handleOtpVerify} className="space-y-3">
