@@ -12,7 +12,6 @@ import { Helmet } from "react-helmet-async";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
-
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("jobs");
   const [showForm, setShowForm] = useState(false);
@@ -56,10 +55,18 @@ const Dashboard = () => {
     }
   };
 
-
+  // ---------- APPLICANTS & FILTER STATE ----------
   const [applicants, setApplicants] = useState([]);
   const [filterJob, setFilterJob] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+
+  // New filter states (Search by Name / Email / Phone)
+  const [searchName, setSearchName] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchPhone, setSearchPhone] = useState("");
+
+  // Sorting state
+  const [sortOption, setSortOption] = useState("");
 
   const jobTitles = [
     "Frontend",
@@ -71,9 +78,8 @@ const Dashboard = () => {
     "Technical Support",
   ];
 
-
   const [currentPage, setCurrentPage] = useState(1);
-  const applicantsPerPage = 5;
+  const applicantsPerPage = 10;
 
   // 📦 Fetch Jobs
   const fetchJobs = async () => {
@@ -101,14 +107,11 @@ const Dashboard = () => {
   }, []);
 
   const navigateToHome = () => {
-    // const handleLogout = () => {
     Cookies.remove("token");          // remove cookie token
     localStorage.removeItem("sessionExpiry");
 
     alert("Logged out successfully!");
     navigate("/", { replace: true });
-    // };
-    // redirect to home page
   };
 
   // ✅ Validation Function
@@ -145,7 +148,6 @@ const Dashboard = () => {
       console.error("Error adding job:", error);
     }
   };
-
 
   // ✅ Update Job
   const handleUpdateJob = async () => {
@@ -211,14 +213,46 @@ const Dashboard = () => {
     });
   };
 
-  // ✅ Filter applicants
-  const filteredApplicants = applicants.filter(
-    (a) =>
+  // -------------------- FILTER + SORT LOGIC --------------------
+  // This replaces the old filteredApplicants and adds search + sort.
+  const filteredApplicants = applicants
+    .filter((a) =>
+      // Job filter (empty means all)
       (filterJob === "" || a.jobTitle === filterJob) &&
-      (filterStatus === "" || a.status === filterStatus)
-  );
+      // Status filter
+      (filterStatus === "" || a.status === filterStatus) &&
+      // Name search (case-insensitive)
+      (searchName === "" || (a.name || "").toLowerCase().includes(searchName.toLowerCase())) &&
+      // Email search (case-insensitive)
+      (searchEmail === "" || (a.email || "").toLowerCase().includes(searchEmail.toLowerCase())) &&
+      // Phone search (partial match)
+      (searchPhone === "" || (a.phone || "").includes(searchPhone))
+    )
+    .sort((a, b) => {
+      if (sortOption === "az") return (a.name || "").localeCompare(b.name || "");
+      if (sortOption === "za") return (b.name || "").localeCompare(a.name || "");
+      if (sortOption === "newest") {
+        // fallback: if createdAt not present, compare by _id (string) so order is stable
+        const da = a.createdAt ? new Date(a.createdAt) : null;
+        const db = b.createdAt ? new Date(b.createdAt) : null;
+        if (da && db) return db - da;
+        return (b._id || "").localeCompare(a._id || "");
+      }
+      if (sortOption === "oldest") {
+        const da = a.createdAt ? new Date(a.createdAt) : null;
+        const db = b.createdAt ? new Date(b.createdAt) : null;
+        if (da && db) return da - db;
+        return (a._id || "").localeCompare(b._id || "");
+      }
+      return 0;
+    });
 
-  // ✅ Pagination Logic
+  // Reset page to 1 when filters change to avoid empty pages
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterJob, filterStatus, searchName, searchEmail, searchPhone, sortOption, applicants]);
+
+  // ✅ Pagination Logic (unchanged)
   const indexOfLast = currentPage * applicantsPerPage;
   const indexOfFirst = indexOfLast - applicantsPerPage;
   const currentApplicants = filteredApplicants.slice(indexOfFirst, indexOfLast);
@@ -230,8 +264,6 @@ const Dashboard = () => {
   const handlePrev = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-
-
 
   // 🗑️ Delete Applicant
   const handleDeleteApplicant = async (id) => {
@@ -321,6 +353,16 @@ const Dashboard = () => {
             totalPages={totalPages}
             handleStatusChange={handleStatusChange}
             handleDeleteApplicant={handleDeleteApplicant}
+            applicantsPerPage={applicantsPerPage}
+            // pass new filter & sort states and their setters
+            searchName={searchName}
+            setSearchName={setSearchName}
+            searchEmail={searchEmail}
+            setSearchEmail={setSearchEmail}
+            searchPhone={searchPhone}
+            setSearchPhone={setSearchPhone}
+            sortOption={sortOption}
+            setSortOption={setSortOption}
           />
         )}
       </main>
@@ -495,15 +537,24 @@ const ApplicantSection = ({
   totalPages,
   handleStatusChange,
   handleDeleteApplicant,
+   applicantsPerPage,  
+  searchName,
+  setSearchName,
+  searchEmail,
+  setSearchEmail,
+  searchPhone,
+  setSearchPhone,
+  sortOption,
+  setSortOption
 }) => (
   <div>
     <h2 className="text-2xl font-semibold mb-4">Applicants</h2>
 
-    <div className="flex gap-4 mb-4">
+    {/* ---------------- FILTERS: Job / Status / Search Name / Email / Phone / Sort ---------------- */}
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+      {/* Job Filter (fixed) */}
       <select
-        onChange={(e) =>
-          handleStatusChange(app._id, e.target.value)
-        }
+        onChange={(e) => setFilterJob(e.target.value)}
         value={filterJob}
         className="border p-2 rounded-md"
       >
@@ -515,6 +566,7 @@ const ApplicantSection = ({
         ))}
       </select>
 
+      {/* Status Filter */}
       <select
         onChange={(e) => setFilterStatus(e.target.value)}
         value={filterStatus}
@@ -525,8 +577,50 @@ const ApplicantSection = ({
         <option value="Shortlisted">Shortlisted</option>
         <option value="Rejected">Rejected</option>
       </select>
+
+      {/* Search by Name */}
+      <input
+        type="text"
+        placeholder="Search by Name"
+        value={searchName}
+        onChange={(e) => setSearchName(e.target.value)}
+        className="border p-2 rounded-md"
+      />
+
+      {/* Search by Email */}
+      <input
+        type="text"
+        placeholder="Search by Email"
+        value={searchEmail}
+        onChange={(e) => setSearchEmail(e.target.value)}
+        className="border p-2 rounded-md"
+      />
     </div>
 
+    {/* Extra row: Phone + Sort */}
+    <div className="flex gap-4 mb-4">
+      <input
+        type="text"
+        placeholder="Search by Phone"
+        value={searchPhone}
+        onChange={(e) => setSearchPhone(e.target.value)}
+        className="border p-2 rounded-md w-full md:w-1/3"
+      />
+
+      <select
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+        className="border p-2 rounded-md w-40"
+      >
+        <option value="">Sort By</option>
+        <option value="az">Name A–Z</option>
+        <option value="za">Name Z–A</option>
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+    </div>
+
+    {/* ---------------- TABLE ---------------- */}
     <div className="bg-white p-4 rounded-lg shadow-md">
       <table className="w-full border-collapse border border-gray-300">
         <thead className="bg-gray-100">
@@ -568,12 +662,12 @@ const ApplicantSection = ({
                     "Not Available"
                   )}
                 </td>
+
+                {/* Status Change Dropdown */}
                 <td className="border p-2">
                   <select
                     value={app.status || "Pending"}
-                    onChange={(e) =>
-                      handleStatusChange(app._id, e.target.value)
-                    }
+                    onChange={(e) => handleStatusChange(app._id, e.target.value)}
                     className="border rounded-md p-1"
                   >
                     <option value="Pending">Pending</option>
@@ -581,6 +675,8 @@ const ApplicantSection = ({
                     <option value="Rejected">Rejected</option>
                   </select>
                 </td>
+
+                {/* Delete */}
                 <td className="border p-2 text-center">
                   <button
                     onClick={() => handleDeleteApplicant(app._id)}
@@ -596,7 +692,8 @@ const ApplicantSection = ({
       </table>
     </div>
 
-    {filteredApplicants.length > 5 && (
+    {/* PAGINATION */}
+    {filteredApplicants.length > applicantsPerPage && (
       <div className="flex justify-center items-center mt-4 space-x-3">
         <button
           onClick={handlePrev}
