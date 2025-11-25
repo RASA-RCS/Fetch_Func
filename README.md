@@ -267,14 +267,19 @@ resume: <file>
 ![This is Home page](image.png)
 
 * Services Page
-![this is our services page ](image-1.png)
+![this is our services page ](image-9.png)
 * Job Application Form
 ![Carrer page with applicant form ](image-2.png)
 * Admin Dashboard
-![this is dashboard which is managed by admin](image-4.png)
+![this is dashboard which is managed by admin](image-8.png)
 ![this is applicant](image-5.png)
 ![Conditional based through job profile](image-6.png)
 ![Applicant review](image-7.png)
+*Email format
+![When applicant apply job then email received ](image-12.png)
+![Applicant status received when applicant selected](image-10.png)
+![Aplicant Status received when applicant rejected](image-11.png)
+
 
 * Uml Diagram
 ![alt text](umlDiagram.png)
