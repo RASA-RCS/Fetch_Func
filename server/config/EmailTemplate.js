@@ -111,16 +111,7 @@ export const sendStatusEmail = async (email, name, jobTitle, status) => {
          <p>Regards,<br/>Priyanka Consultancy Services</p>
       `;
     }
-    else if (status === "Pending") {
-      subject = `Application Received for ${jobTitle}`;
-      message = `
-        <h2>Hello ${name},</h2>
-        <p>Thank you for applying for the <strong>${jobTitle}</strong> position at our company.</p>
-        <p>We have received your application successfully and our team will review it shortly.</p>
-        <br/>
-        <p>Regards,<br/>HR Team</p>
-      `;
-    }
+    
 
     const mailOptions = {
       from: process.env.EMAIL,

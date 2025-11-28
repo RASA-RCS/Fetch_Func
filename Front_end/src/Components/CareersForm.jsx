@@ -2,12 +2,12 @@
 //  Copyright (c) [2025] [Rasa Consultancy Services]. All rights reserved.
 //  This software is the confidential and proprietary information of [Rasa Consultancy Services]. 
 //  You shall not disclose such confidential information and shall use it only in accordance 
-//with the terms of the license agreement you entered into with [Rasa Consultancy Services].
+//  with the terms of the license agreement you entered into with [Rasa Consultancy Services].
 //  For more information, please contact: [Your Company Email/Legal Department Contact]
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CareersForm = ({ selectedJob }) => {
@@ -23,10 +23,27 @@ const CareersForm = ({ selectedJob }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // ✅ Input Change Handler with Validation
+  // ✅ Load saved data from localStorage whenever selectedJob changes
+  useEffect(() => {
+    const savedData = JSON.parse(localStorage.getItem("careersFormData")) || {};
+    setFormData({
+      ...savedData,
+      jobTitle: selectedJob || savedData.jobTitle || "",
+      resume: null, // always reset resume when opening a new job
+    });
+    setError("");
+    setSuccess("");
+  }, [selectedJob]);
+
+  // ✅ Save form data to localStorage (excluding resume)
+  useEffect(() => {
+    const { resume, ...textOnly } = formData;
+    localStorage.setItem("careersFormData", JSON.stringify(textOnly));
+  }, [formData]);
+
+  // ✅ Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (name === "resume") {
       const file = files[0];
       if (file && file.type !== "application/pdf") {
@@ -44,7 +61,7 @@ const CareersForm = ({ selectedJob }) => {
     }
   };
 
-  // ✅ Validation Function
+  // ✅ Validate form
   const validateForm = () => {
     const nameRegex = /^[A-Za-z\s]+$/;
     const phoneRegex = /^[0-9]{10}$/;
@@ -70,60 +87,50 @@ const CareersForm = ({ selectedJob }) => {
     setError("");
     return true;
   };
-   
 
+  // ✅ Handle submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-  // ✅ Submit Handler
- const handleSubmit = async (e) => {
-  e.preventDefault();
+    try {
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("phone", formData.phone);
+      data.append("age", formData.age);
+      data.append("jobTitle", formData.jobTitle);
+      data.append("resume", formData.resume);
 
-  if (!validateForm()) return;
+      const response = await axios.post(
+        "http://localhost:9000/api/applicants",
+        data,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
-  try {
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("email", formData.email);
-    data.append("phone", formData.phone);
-    data.append("age", formData.age);
-    data.append("jobTitle", formData.jobTitle);
-    data.append("resume", formData.resume);
+      toast.success("Thank you for applying! Email sent successfully.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
 
-    const response = await axios.post(
-      "http://localhost:9000/api/applicants",
-      data,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
+      console.log("Server Response:", response.data);
 
-    // ✅ Show toast notification
-    toast.success("Thank you for applying! Email sent successfully.", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+      // ✅ Clear resume but keep all other fields in localStorage
+      setFormData((prev) => ({
+        ...prev,
+        resume: null,
+      }));
 
-    console.log("Server Response:", response.data);
-    setError("");
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      age: "",
-      jobTitle: selectedJob || "",
-      resume: null,
-    });
-  } catch (err) {
-    console.error("Error uploading:", err);
-    toast.error("Failed to submit application. Please try again.", {
-      position: "top-right",
-      autoClose: 3000,
-    });
-  }
-};
-
+      setError("");
+      setSuccess("Application submitted successfully!");
+    } catch (err) {
+      console.error("Error uploading:", err);
+      toast.error("Failed to submit application. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -183,9 +190,7 @@ const CareersForm = ({ selectedJob }) => {
       </div>
 
       <div>
-        <label className="block mb-1 font-medium">
-          Upload Resume (PDF, max 5MB)
-        </label>
+        <label className="block mb-1 font-medium">Upload Resume (PDF, max 5MB)</label>
         <input
           type="file"
           name="resume"

@@ -2,9 +2,8 @@
 //  Copyright (c) [2025] [Rasa Consultancy Services]. All rights reserved.
 //  This software is the confidential and proprietary information of [Rasa Consultancy Services]. 
 //  You shall not disclose such confidential information and shall use it only in accordance 
-//with the terms of the license agreement you entered into with [Rasa Consultancy Services].
+//  with the terms of the license agreement you entered into with [Rasa Consultancy Services].
 //  For more information, please contact: [Your Company Email/Legal Department Contact]
-
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +13,6 @@ import CareersForm from "./CareersForm";
 import { io } from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 
 // ✅ Create socket connection outside the component (global)
 const socket = io("http://localhost:9000", {
@@ -72,48 +70,48 @@ const Careers = () => {
     }
   };
 
- // ✅ Connect socket and listen for updates
-useEffect(() => {
-  fetchJobs();
+  // ✅ Connect socket and listen for updates
+  useEffect(() => {
+    fetchJobs();
 
-  socket.on("connect", () => {
-    console.log("🟢 Connected to Socket.io server");
-  });
+    socket.on("connect", () => {
+      console.log("🟢 Connected to Socket.io server");
+    });
 
-  // ✅ Listen to the same event your server emits: "jobUpdated"
-  socket.on("jobUpdated", (data) => {
-    console.log(" Job update received:", data);
+    // Listen for job updates from server
+    socket.on("jobUpdated", (data) => {
+      console.log(" Job update received:", data);
 
-    // 🔄 Update state instantly without fetching again (optional but fast)
-    if (data.type === "added") {
-      setJobs((prev) => [data.job, ...prev]);
-      toast.success(` New job added: ${data.job.title}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    } else if (data.type === "updated") {
-      setJobs((prev) =>
-        prev.map((j) => (j._id === data.job._id ? data.job : j))
-      );
-      toast.info(` Job updated: ${data.job.title}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    } else if (data.type === "deleted") {
-      setJobs((prev) => prev.filter((j) => j._id !== data.jobId));
-      toast.warn(` A job was removed.`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    }
-  });
+      if (data.type === "added") {
+        setJobs((prev) => [data.job, ...prev]);
+        toast.success(` New job added: ${data.job.title}`, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } else if (data.type === "updated") {
+        setJobs((prev) =>
+          prev.map((j) => (j._id === data.job._id ? data.job : j))
+        );
+        toast.info(` Job updated: ${data.job.title}`, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } else if (data.type === "deleted") {
+        setJobs((prev) => prev.filter((j) => j._id !== data.jobId));
+        toast.warn(` A job was removed.`, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    });
 
-  return () => {
-    socket.off("jobUpdated");
-    // socket.disconnect();
-  };
-}, []);
+    return () => {
+      socket.off("jobUpdated");
+    };
+  }, []);
 
+  // ✅ Handle Apply Click: set selected job and show form
+  // Form will auto-fetch cached data from localStorage internally
   const handleApplyClick = (jobTitle) => {
     setSelectedJob(jobTitle);
     setShowForm(true);
@@ -127,7 +125,9 @@ useEffect(() => {
 
       {/* Header Section */}
       <div className="py-12 text-center text-white bg-gradient-to-r from-blue-800 to-indigo-100">
-        <h1 className="text-4xl font-extrabold md:text-5xl">Join Our Team @ XYZ</h1>
+        <h1 className="text-4xl font-extrabold md:text-5xl">
+          Join Our Team @ XYZ
+        </h1>
       </div>
 
       {/* Slider Section */}
@@ -153,8 +153,12 @@ useEffect(() => {
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="mb-4 text-2xl font-bold text-gray-800">{slides[index].title}</h2>
-            <p className="text-gray-700 leading-relaxed">{slides[index].description}</p>
+            <h2 className="mb-4 text-2xl font-bold text-gray-800">
+              {slides[index].title}
+            </h2>
+            <p className="text-gray-700 leading-relaxed">
+              {slides[index].description}
+            </p>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -168,7 +172,9 @@ useEffect(() => {
         {loading ? (
           <p className="text-center text-gray-600">Loading jobs...</p>
         ) : jobs.length === 0 ? (
-          <p className="text-center text-gray-500">No job openings available right now.</p>
+          <p className="text-center text-gray-500">
+            No job openings available right now.
+          </p>
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {jobs.map((job) => (

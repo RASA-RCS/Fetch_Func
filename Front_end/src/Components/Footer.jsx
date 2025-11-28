@@ -92,7 +92,7 @@ const Footer = () => {
                 </h4>
                 <div className="flex items-center mb-6">
                   <a
-                    href="https://www.facebook.com/amarjeet.gupta.119804/"
+                    href="https://www.facebook.com/amarjeet.gupta.114/"
                     className="flex items-center justify-center w-8 h-8 mr-3 border rounded-full border-stroke text-dark hover:border-primary hover:bg-primary hover:text-white dark:border-dark-3 dark:text-black dark:hover:border-primary sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <svg
@@ -105,7 +105,7 @@ const Footer = () => {
                     </svg>
                   </a>
                   <a
-                    href="https://www.instagram.com/call.me.amarjeet/"
+                    href="https://www.instagram.com/calme.amarjeet/"
                     className="flex items-center justify-center w-8 h-8 mr-3 border rounded-full border-stroke text-dark hover:border-primary hover:bg-primary hover:text-white dark:border-dark-3 dark:text-black dark:hover:border-primary sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <svg
@@ -118,7 +118,7 @@ const Footer = () => {
                     </svg>
                   </a>
                   <a
-                    href="https://www.instagram.com/call.me.amarjeet/"
+                    href="https://www.instagram.com/cale.amarjeet/"
                     className="flex items-center justify-center w-8 h-8 mr-3 border rounded-full border-stroke text-dark hover:border-primary hover:bg-primary hover:text-white dark:border-dark-3 dark:text-black dark:hover:border-primary sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <svg
@@ -131,7 +131,7 @@ const Footer = () => {
                     </svg>
                   </a>
                   <a
-                    href="https://www.facebook.com/amarjeet.gupta.119804/"
+                    href="https://www.facebook.com/amaet.gupta.119804/"
                     className="flex items-center justify-center w-8 h-8 mr-3 border rounded-full border-stroke text-dark hover:border-primary hover:bg-primary hover:text-white dark:border-dark-3 dark:text-black dark:hover:border-primary sm:mr-4 lg:mr-3 xl:mr-4"
                   >
                     <svg

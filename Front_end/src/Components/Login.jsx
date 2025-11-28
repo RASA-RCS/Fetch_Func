@@ -281,6 +281,8 @@ const Login = () => {
         Cookies.set("token", response.data.token, { expires: 7, secure: true, sameSite: "Strict" });
         Cookies.set("name", response.data.user?.Fname || "", { expires: 7, secure: true, sameSite: "Strict" });
         Cookies.set("email", response.data.user?.email || pendingEmail, { expires: 7, secure: true, sameSite: "Strict" }); // NEW
+       
+        
 
         saveRememberMe(input.email, input.password); 
 
