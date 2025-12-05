@@ -124,7 +124,7 @@ const Careers = () => {
       </Helmet>
 
       {/* Header Section */}
-      <div className="py-12 text-center text-white bg-gradient-to-r from-blue-800 to-indigo-100">
+      <div className="py-8 text-center text-white bg-gradient-to-r from-blue-800 to-indigo-100 mt-20">
         <h1 className="text-4xl font-extrabold md:text-5xl">
           Join Our Team @ XYZ
         </h1>

@@ -11,23 +11,29 @@ A complete full-stack application that includes a modern React (Vite + Tailwind)
 
 ##  Project Structure
 
-```
+``` 
+
 Front_end/
 │
 ├── public/
 ├── src/                      # Frontend (React)
 │   ├── assets/
 │   ├── Components/
+│   │   ├── Admin.jsx
+│   │   ├── Captcha.jsx
 │   │   ├── Careers.jsx
 │   │   ├── CareersForm.jsx
 │   │   ├── ContactUs.jsx
 │   │   ├── DashBoard.jsx
 │   │   ├── Footer.jsx
 │   │   ├── Home.jsx
+│   │   ├── Login.jsx
 │   │   ├── NavBar.jsx
 │   │   ├── OurServices.jsx
+│   │   ├── Register.jsx
 │   │   ├── ServiceDetail.jsx
 │   │   ├── servicesData.jsx
+│   │   ├── UserFrom.jsx
 │   └── image/
 │
 ├── server/                   # Backend (Node.js)

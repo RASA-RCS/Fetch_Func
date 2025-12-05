@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet-async";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
+
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("jobs");
   const [showForm, setShowForm] = useState(false);
@@ -81,15 +82,36 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const applicantsPerPage = 10;
 
-  // 📦 Fetch Jobs
-  const fetchJobs = async () => {
-    try {
-      const res = await axios.get("http://localhost:9000/api/jobs");
-      setJobs(res.data);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
+
+
+// 📦 Fetch Jobs with validation
+// 📦 Fetch Jobs with validation for specific fields
+const fetchJobs = async () => {
+  try {
+    const res = await axios.get("http://localhost:9000/api/jobs");
+    const data = res.data;
+
+    // Define the fields you want to validate
+    const requiredFields = ["title", "description", "skills", "Opening",  "salary"];
+
+    // Find jobs with any missing field
+    const invalidJobs = data.filter((job) =>
+      requiredFields.some((field) => !job[field] || job[field] === "")
+    );
+
+    if (invalidJobs.length > 0) {
+      toast.error("Error: Some job entries have missing fields!");
+      console.warn("Jobs with missing fields detected:", invalidJobs);
+    } else {
+      setJobs(data); // Update state only if all rows are valid
     }
-  };
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    toast.error("Failed to fetch jobs.");
+  }
+};
+
+
 
   // 📦 Fetch Applicants
   const fetchApplicants = async () => {

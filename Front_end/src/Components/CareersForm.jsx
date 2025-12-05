@@ -20,6 +20,59 @@ const CareersForm = ({ selectedJob }) => {
     resume: null,
   });
 
+  const [liveErrors, setLiveErrors] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    age: "",
+
+  });
+
+  const validateLive = (name, value) => {
+    let message = "";
+
+    if (name === "name") {
+      if (!/^[A-Za-z]*$/.test(value)) {
+        message = "Only letters allowed";
+      }
+    }
+    if (name === "phone") {
+      if (!/^\d*$/.test(value)) {
+        message = "Only digits allowed";
+      } else if (value.length > 10) {
+        message = "Cannot exceed 10 digits";
+      }
+    }
+    // Email — MUST HAVE ONLY ONE DOT AFTER '@'
+    if (name === "email") {
+      const emailParts = value.split("@");
+
+      if (emailParts.length === 2) {
+        const afterAt = emailParts[1];
+        const dotCount = (afterAt.match(/\./g) || []).length;
+
+        if (dotCount > 1) {
+          message = "Only one dot allowed after @";
+        }
+      }
+
+      // Basic email shape check
+      const emailRegex =
+        /^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+      if (value && !emailRegex.test(value)) {
+        message =
+          "Invalid email format (must start with a letter and contain only one dot after @)";
+      }
+    }
+
+    setLiveErrors((prev) => ({
+      ...prev,
+      [name]: message,
+    }));
+  };
+
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -141,14 +194,22 @@ const CareersForm = ({ selectedJob }) => {
       <div>
         <label className="block mb-1 font-medium">Full Name</label>
         <input
-          type="text"
           name="name"
-          required
           value={formData.name}
-          onChange={handleChange}
+          type="text"
+          onChange={(e) => {
+            const { name, value } = e.target;
+            setFormData({ ...formData, [name]: value });
+            validateLive(name, value);
+            handleChange;
+          }}
+          required
           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
           placeholder="Enter your full name"
         />
+        {liveErrors.name && (
+          <p className="text-red-500 text-xs">{liveErrors.name}</p>
+        )}
       </div>
 
       <div>
@@ -158,10 +219,18 @@ const CareersForm = ({ selectedJob }) => {
           name="email"
           required
           value={formData.email}
-          onChange={handleChange}
+          onChange={(e) => {
+            const { name, value } = e.target;
+            setFormData({ ...formData, [name]: value });
+            validateLive(name, value);
+            handleChange;
+          }}
           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
           placeholder="example@email.com"
         />
+        {liveErrors.email && (
+          <p className="text-red-500 text-xs">{liveErrors.email}</p>
+        )}
       </div>
 
       <div>
@@ -171,10 +240,18 @@ const CareersForm = ({ selectedJob }) => {
           name="phone"
           required
           value={formData.phone}
-          onChange={handleChange}
+          onChange={(e) => {
+            const { name, value } = e.target;
+            setFormData({ ...formData, [name]: value });
+            validateLive(name, value);
+            handleChange;
+          }}
           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
           placeholder="10-digit number"
         />
+        {liveErrors.phone && (
+          <p className="text-red-500 text-xs">{liveErrors.phone}</p>
+        )}
       </div>
 
       <div>
@@ -184,9 +261,17 @@ const CareersForm = ({ selectedJob }) => {
           name="age"
           required
           value={formData.age}
-          onChange={handleChange}
+          onChange={(e) => {
+            const { name, value } = e.target;
+            setFormData({ ...formData, [name]: value });
+            validateLive(name, value);
+            handleChange;
+          }}
           className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
         />
+         {liveErrors.age && (
+          <p className="text-red-500 text-xs">{liveErrors.age}</p>
+        )}
       </div>
 
       <div>

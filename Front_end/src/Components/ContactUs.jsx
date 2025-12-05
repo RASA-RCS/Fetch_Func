@@ -87,7 +87,7 @@ const ContactUs = () => {
       </Helmet>
 
       {/* Hero */}
-      <div className="py-12 text-center text-white bg-gradient-to-r from-blue-800 to-indigo-200">
+      <div className="py-4 text-center text-white bg-gradient-to-r from-blue-800 to-indigo-200 mt-20">
         <h1 className="text-4xl font-bold md:text-5xl">Contact Us</h1>
         <p className="mt-3 text-lg opacity-90">
           We’d love to hear from you! Get in touch with us.

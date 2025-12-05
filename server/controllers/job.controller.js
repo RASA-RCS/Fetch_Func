@@ -36,6 +36,7 @@ export const createJob = async (req, res) => {
 export const getAllJobs = async (req, res) => {
   try {
     const jobs = await Job.find();
+    
     res.json(jobs);
   } catch (err) {
     res.status(500).json({ message: err.message });

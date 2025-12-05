@@ -7,6 +7,7 @@
 
 import nodemailer from "nodemailer";
 
+
 /**
  * Function: sendEmailtoUser
  * Description: Sends a verification email to the user with the provided link.
@@ -98,7 +99,7 @@ export const sendStatusEmail = async (email, name, jobTitle, status) => {
         <p>You have been <strong>shortlisted</strong> for the <strong>${jobTitle}</strong> position.</p>
         <p>Our team will contact you soon with further interview details.</p>
         <br/>
-         <p>Warm Regards,<br/>Priyanka Consultancy Services</p>
+         <p>Warm Regards,<br/>Xyz  Services</p>
       `;
     } else if (status === "Rejected") {
       subject = `Update on your ${jobTitle} Application`;
@@ -108,7 +109,7 @@ export const sendStatusEmail = async (email, name, jobTitle, status) => {
         <p>Unfortunately, your application was <b>not selected</b>.</p>
         <p>We encourage you to apply again in the future.</p>
         <br/>
-         <p>Regards,<br/>Priyanka Consultancy Services</p>
+         <p>Regards,<br/>Xyz Services</p>
       `;
     }
     
@@ -130,11 +131,12 @@ export const sendStatusEmail = async (email, name, jobTitle, status) => {
   }
 };
 
+
 /**
- * Function: sendAdminNotification
- * Description: Sends an email to admin when a new applicant applies
+ * Function: sendApplicantThankYou
+ * Description: Sends a thank-you email to the applicant after applying
  */
-export const sendApplicationEmail = async (name, email, phone, age, jobTitle) => {
+export const sendApplicantThankYou = async (email, name, jobTitle) => {
   try {
     const transport = nodemailer.createTransport({
       service: "gmail",
@@ -149,26 +151,25 @@ export const sendApplicationEmail = async (name, email, phone, age, jobTitle) =>
 
     const mailOptions = {
       from: process.env.EMAIL,
-      to: process.env.ADMIN_EMAIL, // ADD THIS IN .env FILE
-      subject: `New Applicant Applied for ${jobTitle}`,
+      to: email,
+      subject: `Thank you for applying for ${jobTitle}`,
       html: `
-        <h2>New Job Application Received</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Age:</strong> ${age}</p>
-        <p><strong>Job Title:</strong> ${jobTitle}</p>
+        <h2>Hello ${name},</h2>
+        <p>Thank you for applying for the <strong>${jobTitle}</strong> position.</p>
+        <p>We have received your application and our team will contact you soon.</p>
         <br/>
-        <p>Login to your Admin Dashboard to review the applicant.</p>
+        <p>Regards,<br/>Xyz Consultancy Services</p>
       `,
     };
 
     const info = await transport.sendMail(mailOptions);
+    console.log("📩 Applicant Thank-You Email Sent:", info.response);
 
-    console.log("📩 Admin Notification Sent:", info.response);
     return { success: true };
-  } catch (err) {
-    console.log("❌ Admin Email Error:", err);
-    return { success: false, error: err.message };
+  } catch (error) {
+    console.log("❌ Applicant Email Error:", error);
+    return { success: false, error: error.message };
   }
 };
+
+

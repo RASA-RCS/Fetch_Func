@@ -9,7 +9,7 @@ import servicesData from "./servicesData"; // All service categories + items
 import { motion, useAnimation } from "framer-motion"; // Animation library
 import { useInView } from "react-intersection-observer"; // Detect when elements enter viewport
 import { Link } from "react-router-dom"; // For navigation (SPA)
-import {Helmet} from "react-helmet-async"
+import { Helmet } from "react-helmet-async"
 
 // -------------------------------------------------------------
 // 3D TILT EFFECT → Creates card tilt animation on mouse movement
@@ -78,9 +78,15 @@ const Home = () => {
       transition: { delay: i * 0.15 }, // Animate each card one by one
     }),
   };
+// -----------------------------------------
+  // THOUGHT OF THE DAY (Live API)
+  // -----------------------------------------
+
+ 
+
 
   return (
-    <div className="w-full bg-gray-300 dark:bg-gray-900 dark:text-white transition">
+    <div className="w-full bg-gray-300 mt-24 dark:bg-gray-900 dark:text-white transition">
       <Helmet>
         <title>Company Website</title>
       </Helmet>
@@ -89,7 +95,7 @@ const Home = () => {
       {/* HERO SECTION (Landing Banner) */}
       {/* ------------------------------------ */}
       <section className="min-h-screen flex items-center justify-center px-6">
-        <div className="grid md:grid-cols-2 gap-8 items-center container mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 items-center mt-container mx-auto">
 
           {/* Text Content */}
           <motion.div
@@ -145,8 +151,8 @@ const Home = () => {
         <button
           onClick={() => setSelectedCategory("All")}
           className={`px-5 py-2 rounded-full transition ${selectedCategory === "All"
-              ? "bg-purple-600 text-white"
-              : "bg-gray-200 dark:bg-gray-700"
+            ? "bg-purple-600 text-white"
+            : "bg-gray-200 dark:bg-gray-700"
             }`}
         >
           All
@@ -158,8 +164,8 @@ const Home = () => {
             key={cat.category}
             onClick={() => setSelectedCategory(cat.category)}
             className={`px-5 py-2 rounded-full transition ${selectedCategory === cat.category
-                ? "bg-purple-600 text-white"
-                : "bg-gray-200 dark:bg-gray-700"
+              ? "bg-purple-600 text-white"
+              : "bg-gray-200 dark:bg-gray-700"
               }`}
           >
             {cat.category}
@@ -176,7 +182,7 @@ const Home = () => {
       >
         {filteredServices.map((service, index) => (
           <TiltCard
-          
+
             key={service.id}
             service={service}
             index={index}
@@ -185,7 +191,7 @@ const Home = () => {
           />
         ))}
       </section>
-      
+
 
       {/* ------------------------------------ */}
       {/* ABOUT SECTION */}
@@ -309,6 +315,7 @@ const Home = () => {
 // -------------------------------------------------------------
 const TiltCard = ({ service, index, controls, cardVariants }) => {
   const [style, setStyle] = useState({}); // Dynamic style for tilt effect
+
 
   return (
     <Link to={`/service/${service.id}`}>

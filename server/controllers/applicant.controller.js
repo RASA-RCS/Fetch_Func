@@ -6,7 +6,8 @@
 //  For more information, please contact: [Your Company Email/Legal Department Contact]
 
 import Applicant from "../models/applicant.model.js";
-import { sendStatusEmail, sendApplicationEmail } from "../config/EmailTemplate.js";
+import { sendStatusEmail,sendApplicantThankYou } from "../config/EmailTemplate.js";
+// import {  } from "../config/EmailTemplate.js";
 import path from "path";
 import fs from "fs";
 import multer from "multer";
@@ -45,6 +46,10 @@ export const uploadResume = multer({
 //  CREATE APPLICANT + SEND EMAIL
 
 
+// --------------------------------------
+//  CREATE APPLICANT + SEND EMAIL
+// --------------------------------------
+
 export const createApplicant = async (req, res) => {
   try {
     if (!req.file) {
@@ -66,20 +71,26 @@ export const createApplicant = async (req, res) => {
     await applicant.save();
 
     // -----------------------------
-    // Send email to applicant
+    // Send Thank You Email to Applicant
     // -----------------------------
-    await sendStatusEmail(email, name, jobTitle, "Pending");
+   await sendApplicantThankYou(email, name, jobTitle);  // send email to applicant
 
-    // Send response to frontend
+
+
+    // OR if you still want to send status email also:
+    // await sendStatusEmail(email, name, jobTitle, "Pending");
+
     res.status(201).json({
       message: `Thank you for applying for ${jobTitle}! An email has been sent to ${email}`,
       applicant,
     });
+
   } catch (error) {
     console.error("Error creating applicant:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };
+
 
 
 
