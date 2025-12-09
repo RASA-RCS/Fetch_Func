@@ -5,12 +5,12 @@
 //with the terms of the license agreement you entered into with [Rasa Consultancy Services].
 //  For more information, please contact: [Your Company Email/Legal Department Contact]
 // src/config/db.js
-const mongoose = require("mongoose");
-const { mongoURI } = require("./config");
+import { connect } from "mongoose";
+import { mongoURI } from "./config.js";
 
 async function connectDB() {
   try {
-    await mongoose.connect(mongoURI, {
+    await connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
@@ -22,4 +22,5 @@ async function connectDB() {
   }
 }
 
-module.exports = connectDB;
+export default connectDB;
+

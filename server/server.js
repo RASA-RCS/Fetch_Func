@@ -12,10 +12,13 @@ import http from "http";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js"; // All authentication related routes
 import dotenv from "dotenv"; 
+import path  from "path";
+import morgan from "morgan";
 
 // Routes
 import jobRoutes from "./routes/job.routes.js";
 import applicantRoutes from "./routes/applicant.routes.js";
+
 
 // Socket controller link
 import { setSocket } from "./controllers/job.controller.js";
@@ -24,6 +27,8 @@ import { setSocket } from "./controllers/job.controller.js";
 import { Server } from "socket.io";
 
 const app = express();
+
+const _dirct=path.resolve();
 
 const PORT = process.env.PORT || 9000; // Set port from env or default 9000
 
@@ -44,6 +49,8 @@ app.use("/api/applicants", applicantRoutes);
 
 // Authentication routes
 app.use("/api/auth", authRoutes); // All routes prefixed with /api/auth
+app.use(express.static(path.join(_dirct,"/client/dist")));
+
 
 // ================================
 // CREATE HTTP SERVER

@@ -5,11 +5,8 @@
 //with the terms of the license agreement you entered into with [Rasa Consultancy Services].
 //  For more information, please contact: [Your Company Email/Legal Department Contact]
 // src/config/config.js
-const dotenv = require("dotenv");
-dotenv.config();
+import { config } from "dotenv";
+config();
 
-module.exports = {
-  port: process.env.PORT || 5000,
-
-  mongoURI: process.env.MONGO_URI || "mongodb://localhost:27017/job_portal"
-};
+export const port = process.env.PORT || 5000;
+export const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/job_portal";
