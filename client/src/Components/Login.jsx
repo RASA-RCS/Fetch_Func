@@ -69,7 +69,7 @@ const Login = () => {
   };
 
 
-// ---------------- OTP ANIMATION STATE ----------------
+  // ---------------- OTP ANIMATION STATE ----------------
   const [randomCode, setRandomCode] = useState(generateRandomCode());
   const [userCode, setUserCode] = useState("");
 
@@ -79,25 +79,25 @@ const Login = () => {
   const [otpSuccess, setOtpSuccess] = useState(false);
 
   // ---------------- Load remembered credentials ----------------
- useEffect(() => {
- const savedData = Cookies.get("rememberData");
-  if (savedData) {
-    try {
-      const { email, password } = JSON.parse(savedData);
-      setInput({
-        email: email || "",
-        password: password ? decode(password) : "",
-      });
-      setRememberMe(true);
-    } catch {
-      setInput((prev) => ({ ...prev, email: savedData }));
-      setRememberMe(true);
+  useEffect(() => {
+    const savedData = Cookies.get("rememberData");
+    if (savedData) {
+      try {
+        const { email, password } = JSON.parse(savedData);
+        setInput({
+          email: email || "",
+          password: password ? decode(password) : "",
+        });
+        setRememberMe(true);
+      } catch {
+        setInput((prev) => ({ ...prev, email: savedData }));
+        setRememberMe(true);
+      }
     }
-  }
-}, []);
+  }, []);
 
 
- // ---------------- PLAY SUCCESS AUDIO ----------------
+  // ---------------- PLAY SUCCESS AUDIO ----------------
   const veriFyOtpSound = () => {
     try {
       const OutSound = new Audio(audios); // use imported audio
@@ -143,7 +143,7 @@ const Login = () => {
     return () => clearInterval(lockInterval);
   }, [lockTimer]);
 
-    // ---------------- FORMAT TIMER ----------------
+  // ---------------- FORMAT TIMER ----------------
 
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60).toString().padStart(2, "0");
@@ -177,7 +177,7 @@ const Login = () => {
         Cookies.set("name", response.data.user?.Fname || "", { expires: 7, secure: true, sameSite: "Strict" });
         Cookies.set("email", response.data.user?.email || input.email, { expires: 7, secure: true, sameSite: "Strict" }); // NEW
 
-         saveRememberMe(input.email, input.password); //  Save Remember Me
+        saveRememberMe(input.email, input.password); //  Save Remember Me
 
         if (rememberMe) {
           Cookies.set(
@@ -241,7 +241,7 @@ const Login = () => {
       Cookies.set("token", response.data.token, { expires: 7, secure: true, sameSite: "Strict" });
       Cookies.set("name", response.data.user?.Fname || "", { expires: 7, secure: true, sameSite: "Strict" });
       Cookies.set("email", response.data.user?.email || userEmail, { expires: 7, secure: true, sameSite: "Strict" });
-      
+
       saveRememberMe(userEmail, input.password);// NEW
 
       if (rememberMe) {
@@ -281,10 +281,10 @@ const Login = () => {
         Cookies.set("token", response.data.token, { expires: 7, secure: true, sameSite: "Strict" });
         Cookies.set("name", response.data.user?.Fname || "", { expires: 7, secure: true, sameSite: "Strict" });
         Cookies.set("email", response.data.user?.email || pendingEmail, { expires: 7, secure: true, sameSite: "Strict" }); // NEW
-       
-        
 
-        saveRememberMe(input.email, input.password); 
+
+
+        saveRememberMe(input.email, input.password);
 
         toast.success("Logged in successfully! Previous session ended.");
         setShowDevicePrompt(false);
@@ -338,7 +338,7 @@ const Login = () => {
         Cookies.set("name", user.displayName, { expires: 7, secure: true, sameSite: "Strict" });
         Cookies.set("email", user.email, { expires: 7, secure: true, sameSite: "Strict" }); // NEW
 
-        saveRememberMe(input.email, input.password); 
+        saveRememberMe(input.email, input.password);
         toast.success("Login successful!");
         navigate("/dashboard");
       }
@@ -393,7 +393,7 @@ const Login = () => {
         Cookies.set("email", user.email, { expires: 7, secure: true, sameSite: "Strict" }); // NEW
         toast.success("Facebook login successful!");
 
-        saveRememberMe(input.email, input.password); 
+        saveRememberMe(input.email, input.password);
         navigate("/dashboard");
       }
     } catch (error) {
@@ -563,10 +563,51 @@ const Login = () => {
             Forgot Password?
           </p>
 
-          {/* <p className="text-center my-3">Or</p> */}
+          {/* Social Login */}
+          <button
+            type="button"
+            onClick={googleSign}
+            className="social-button google-btn w-full mt-3"
+          >
+            <img
+              src="https://www.google.com/favicon.ico"
+              alt="Google Logo"
+              className="icon"
+            />
+            Continue with Google
+          </button>
 
-     
-          {/* </p> */}
+          <button
+            type="button"
+            onClick={facebookSign}
+            className="social-button facebook-btn w-full mt-2 bg-blue-600 text-white flex items-center justify-center gap-2 py-2 rounded hover:bg-blue-700"
+          >
+            <img
+              src="https://www.facebook.com/images/fb_icon_325x325.png"
+              alt="Facebook Logo"
+              className="icon w-5 h-5"
+            />
+            Continue with Facebook
+          </button>
+
+          {/* <a href="#" className="social-button apple-btn mt-2 w-full flex items-center justify-center gap-2">
+            <img
+              src="https://th.bing.com/th/id/R.1ec11a869384bc5e59625bac39b6a099?rik=1dlGqAp84GWGFw&riu=http%3a%2f%2fpngimg.com%2fuploads%2fapple_logo%2fapple_logo_PNG19692.png&ehk=5ghp5P0aLzQqfUKTsPihTYaIP%2b4VcHGKNovcBq8KOuo%3d&risl=&pid=ImgRaw&r=0"
+              alt="Apple Logo"
+              className="icon"
+            />
+            Continue with Apple
+          </a> */}
+
+          <p className="text-sm text-center mt-3">
+            Don’t have an account?{" "}
+            <span
+              className="singbtn cursor-pointer font-medium underline"
+              onClick={() => navigate("/register")}
+            >
+              Sign Up
+            </span>
+          </p>
         </form>
       ) : (
         <form onSubmit={handleOtpVerify} className="space-y-3">
@@ -585,10 +626,10 @@ const Login = () => {
                   value={otp[i] || ""}
                   id={`otp-${i}`}
                   className={`w-12 h-12 text-center border rounded-md text-xl transition focus:ring-2 focus:ring-blue-400 ${otp[i]
-                      ? isDigitValid
-                        ? "border-green-500"
-                        : "border-red-500"
-                      : "border-gray-300"
+                    ? isDigitValid
+                      ? "border-green-500"
+                      : "border-red-500"
+                    : "border-gray-300"
                     }`}
                   onChange={(e) => {
                     const val = e.target.value;
@@ -628,7 +669,7 @@ const Login = () => {
                     }
                     setOtp(newOtp.join(""));
 
-                    
+
                     const nextInput = document.getElementById(`otp-${pasteArray.length - 1}`);
                     nextInput && nextInput.focus();
                   }}

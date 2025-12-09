@@ -108,7 +108,7 @@ const Navbar = () => {
           </div>
         </div>
         <div className="w-full bg-gray-900 text-white py-3 px-4 text-center text-sm md:text-base shadow-inner">
-          <span className="font-semibold">Thought of the Day:</span> <p>{thought}</p>
+          <span className="font-semibold">Fact of the Day :</span> <p>{thought}</p>
         </div>
 
         {/* Mobile Dropdown */}

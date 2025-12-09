@@ -37,11 +37,80 @@ const Register = () => {
     confirmPassword: "", // Confirm password
   });
 
+  const [liveErrors, setLiveErrors] = useState({
+    Fname: "",
+    Mname: "",
+    Lname: "",
+    phone: "",
+    email: "",
+  });
+
   const [passwordVisible, setPasswordVisible] = useState(false); // Toggle password visibility
   const [error, setError] = useState(""); // Stores validation error messages
   const [popupLoading, setPopupLoading] = useState(false); // Prevent multiple social login popups
 
-  const facebookProvider = new FacebookAuthProvider(); // Firebase Facebook provider
+  const validateLive = (name, value) => {
+    let message = "";
+
+    // First Name
+    if (name === "Fname") {
+      if (!/^[A-Za-z]*$/.test(value)) {
+        message = "Only letters allowed";
+      }
+    }
+
+    // Middle Name (optional)
+    if (name === "Mname") {
+      if (value && !/^[A-Za-z]*$/.test(value)) {
+        message = "Only letters allowed";
+      }
+    }
+
+    // Last Name
+    if (name === "Lname") {
+      if (!/^[A-Za-z]*$/.test(value)) {
+        message = "Only letters allowed";
+      }
+    }
+
+    // Phone (only digits + max 10)
+    if (name === "phone") {
+      if (!/^\d*$/.test(value)) {
+        message = "Only digits allowed";
+      } else if (value.length > 10) {
+        message = "Cannot exceed 10 digits";
+      }
+    }
+
+    // Email — MUST HAVE ONLY ONE DOT AFTER '@'
+    if (name === "email") {
+      const emailParts = value.split("@");
+
+      if (emailParts.length === 2) {
+        const afterAt = emailParts[1];
+        const dotCount = (afterAt.match(/\./g) || []).length;
+
+        if (dotCount > 1) {
+          message = "Only one dot allowed after @";
+        }
+      }
+
+      // Basic email shape check
+      const emailRegex =
+        /^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+      if (value && !emailRegex.test(value)) {
+        message =
+          "Invalid email format (must start with a letter and contain only one dot after @)";
+      }
+    }
+
+    setLiveErrors((prev) => ({
+      ...prev,
+      [name]: message,
+    }));
+  };
+
 
   // -------------------- Validate Input Fields --------------------
   const validate = () => {
@@ -122,7 +191,6 @@ const Register = () => {
       toast.error(error.response?.data?.message || "Something went wrong"); // Show backend error
     }
   };
-  
 
   // -------------------- Google Sign-In --------------------
   const googleSign = async () => {
@@ -218,49 +286,67 @@ const Register = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1">
               {/* First Name */}
               <div className="flex items-center gap-2">
-                <img src={user} className="w-5 h-5 sm:w-6 sm:h-6" />
+                <img src={user} alt="" className="w-5 h-5 sm:w-6 sm:h-6" />
                 <input
                   name="Fname"
                   value={input.Fname}
                   placeholder="First Name"
-                  onChange={(e) =>
-                    setInput({ ...input, [e.target.name]: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const { name, value } = e.target;
+                    setInput({ ...input, [name]: value });
+                    validateLive(name, value);
+                  }}
                   required
                   maxLength={10}
                   className="w-full p-2 border rounded text-sm sm:text-base"
                 />
+                {liveErrors.Fname && (
+                  <p className="text-red-500 text-xs">{liveErrors.Fname}</p>
+                )}
               </div>
 
               {/* Middle Name */}
               <div className="flex items-center gap-2">
-                <img src={user} className="w-5 h-5 sm:w-6 sm:h-6" />
+                <img src={user} alt="" className="w-5 h-5 sm:w-6 sm:h-6" />
                 <input
                   name="Mname"
                   value={input.Mname}
                   placeholder="Middle Name"
-                  onChange={(e) =>
-                    setInput({ ...input, [e.target.name]: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const { name, value } = e.target;
+                    setInput({ ...input, [name]: value });
+                    validateLive(name, value);
+                  }}
                   maxLength={10}
                   className="w-full p-2 border rounded text-sm sm:text-base"
                 />
+                {liveErrors.Mname && (
+                  <p className="text-red-500 text-xs">{liveErrors.Mname}</p>
+                )}
               </div>
 
               {/* Last Name */}
               <div className="flex items-center gap-2">
-                <img src={user} className="w-5 h-5 sm:w-6 sm:h-6" />
+                <img src={user} alt="" className="w-5 h-5 sm:w-6 sm:h-6" />
                 <input
                   name="Lname"
                   value={input.Lname}
                   placeholder="Last Name"
-                  onChange={(e) =>
-                    setInput({ ...input, [e.target.name]: e.target.value })
-                  }
+
+
+                  onChange={(e) => {
+                    const { name, value } = e.target;
+                    setInput({ ...input, [name]: value });
+                    validateLive(name, value);
+
+                  }}
                   required
                   maxLength={10}
                   className="w-full p-2 border rounded text-sm sm:text-base"
                 />
+                {liveErrors.Lname && (
+                  <p className="text-red-500 text-xs">{liveErrors.Lname}</p>
+                )}
               </div>
             </div>
           </div>
@@ -277,12 +363,17 @@ const Register = () => {
                 type="email"
                 value={input.email}
                 placeholder="Enter your Valid Email"
-                onChange={(e) =>
-                  setInput({ ...input, [e.target.name]: e.target.value })
-                }
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setInput({ ...input, [name]: value });
+                  validateLive(name, value);
+                }}
                 required
                 className="w-full p-2 border rounded text-sm sm:text-base"
               />
+              {liveErrors.email && (
+                <p className="text-red-500 text-xs">{liveErrors.email}</p>
+              )}
             </div>
           </div>
 
@@ -298,12 +389,17 @@ const Register = () => {
                 maxLength={10}
                 value={input.phone}
                 placeholder="Enter your Contact Number"
-                onChange={(e) =>
-                  setInput({ ...input, [e.target.name]: e.target.value })
-                }
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setInput({ ...input, [name]: value });
+                  validateLive(name, value);
+                }}
                 required
                 className="w-full p-2 border rounded text-sm sm:text-base"
               />
+              {liveErrors.phone && (
+                <p className="text-red-500 text-xs">{liveErrors.phone}</p>
+              )}
             </div>
           </div>
 
@@ -319,9 +415,11 @@ const Register = () => {
                 type={passwordVisible ? "text" : "password"}
                 value={input.password}
                 placeholder="Password"
-                onChange={(e) =>
-                  setInput({ ...input, [e.target.name]: e.target.value })
-                }
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setInput({ ...input, [name]: value });
+                  validateLive(name, value);
+                }}
                 required
                 className="w-full p-2 border rounded text-sm sm:text-base"
               />
@@ -346,16 +444,18 @@ const Register = () => {
                 type={passwordVisible ? "text" : "password"}
                 value={input.confirmPassword}
                 placeholder="Confirm Password"
-                onChange={(e) =>
-                  setInput({ ...input, [e.target.name]: e.target.value })
-                }
+                onChange={(e) => {
+                  const { name, value } = e.target;
+                  setInput({ ...input, [name]: value });
+                  validateLive(name, value);
+                }}
                 required
                 className="w-full p-2 border rounded text-sm sm:text-base"
               />
             </div>
           </div>
 
-          <span className="text-xs text-gray-500 block">
+          <span className="text-xs text-red-500 block">
             Password must be at least 8 characters, include uppercase,
             lowercase, number & special character.
           </span>
